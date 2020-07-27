@@ -1,0 +1,90 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Clean Main",
+      "type": "shell",
+      "command": "rm -f build/* || true",
+      "problemMatcher": []
+    },
+    {
+      "label": "Clean Tests",
+      "type": "shell",
+      "command": "rm -f build/* || true",
+      "problemMatcher": []
+    },
+    {
+      "label": "Build Main",
+      "type": "shell",
+      "command": [
+        "vendor/cc65/bin/cl65",
+        "-o build/main.prg",
+        "--asm-include-dir vendor/cc65/asminc",
+        "--asm-include-dir vendor/cc65/libsrc",
+        "-L vendor/cc65/lib",
+        "-Ln build/main.sym",
+        "-u __EXEHDR__",
+        "-t c64",
+        "-C c64-asm.cfg",
+        "main.asm"
+      ],
+      "dependsOn": ["Clean Main"],
+      "problemMatcher": ["$ca65", "$ld65", "$ld65-config", "$ld65-unresolved"]
+    },
+    {
+      "label": "Build Tests",
+      "type": "shell",
+      "options": {
+        "env": {
+          "CA65_INC": "vendor/c64unit/cross-assemblers/ca65"
+        }
+      },
+      "command": [
+        "vendor/cc65/bin/cl65",
+        "-Oir",
+        "-t c64",
+        "--asm-include-dir vendor/cc65/asminc",
+        "-L vendor/cc65/lib",
+        // "-I vendor/c64unit/cross-assemblers/ca65",
+        // "-I tests/test-cases",
+        // "-I src",
+        "-C tests/c64unit.cfg",
+        "-o build/test-suite.prg",
+        "test-suite.asm"
+      ],
+      "dependsOn": ["Clean Tests"],
+      "problemMatcher": ["$ca65", "$ld65", "$ld65-config", "$ld65-unresolved"]
+    },
+
+    {
+      "label": "Launch VICE",
+      "type": "shell",
+      "command": "/usr/local/bin/x64sc build/main.prg",
+      "problemMatcher": ["$ca65", "$ld65", "$ld65-config", "$ld65-unresolved"]
+    },
+
+    {
+      "label": "Launch Tests",
+      "type": "shell",
+      "command": "/usr/local/bin/x64sc build/test-suite.prg",
+      "problemMatcher": ["$ca65", "$ld65", "$ld65-config", "$ld65-unresolved"]
+    },
+
+    {
+      "label": "run",
+      "dependsOn": ["Build Main", "Launch VICE"]
+    },
+
+    {
+      "label": "test",
+      "dependsOn": ["Build Tests", "Launch Tests"]
+    }
+    // For C64Debugger
+    // "-pass",
+    // "-symbols", sessionState.labelsFilename,
+    // "-prg", sessionState.prgfilename,
+    // "-autojmp
+  ]
+}

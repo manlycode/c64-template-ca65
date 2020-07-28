@@ -62,24 +62,72 @@
       "label": "Launch VICE",
       "type": "shell",
       "command": "/usr/local/bin/x64sc build/main.prg",
-      "problemMatcher": ["$ca65", "$ld65", "$ld65-config", "$ld65-unresolved"]
+      "problemMatcher": {
+        // The problem is owned by the cpp language service.
+        "owner": "x64sc",
+        "fileLocation": ["relative", "${workspaceFolder}"],
+        "pattern": {
+          "regexp": "^.+(Error|Warning) - `(.+)' (.+)$",
+          "severity": 1,
+          "file": 2,
+          "message": 3
+        }
+      }
     },
 
     {
       "label": "Launch Tests",
       "type": "shell",
       "command": "/usr/local/bin/x64sc build/test-suite.prg",
-      "problemMatcher": ["$ca65", "$ld65", "$ld65-config", "$ld65-unresolved"]
+      "problemMatcher": {
+        // The problem is owned by the cpp language service.
+        "owner": "x64sc",
+        "fileLocation": ["relative", "${workspaceFolder}"],
+        "pattern": {
+          "regexp": "^.+(Error|Warning) - `(.+)' (.+)$",
+          "severity": 1,
+          "file": 2,
+          "message": 3
+        }
+      }
     },
 
     {
       "label": "run",
+      "dependsOn": ["Build Main", "Launch VICE"],
+      "problemMatcher": {
+        // The problem is owned by the cpp language service.
+        "owner": "x64sc",
+        "fileLocation": ["relative", "${workspaceFolder}"],
+        "pattern": {
+          "regexp": "^.+(Error|Warning) - `(.+)' (.+)$",
+          "severity": 1,
+          "file": 2,
+          "message": 3
+        }
+      }
+    },
+
+    {
+      "label": "debug",
       "dependsOn": ["Build Main", "Launch VICE"]
     },
 
     {
       "label": "test",
-      "dependsOn": ["Build Tests", "Launch Tests"]
+      "dependsOn": ["Build Tests", "Launch Tests"],
+      "group": "test",
+      "problemMatcher": {
+        // The problem is owned by the cpp language service.
+        "owner": "x64sc",
+        "fileLocation": ["relative", "${workspaceFolder}"],
+        "pattern": {
+          "regexp": "^.+(Error|Warning) - `(.+)' (.+)$",
+          "severity": 1,
+          "file": 2,
+          "message": 3
+        }
+      }
     }
     // For C64Debugger
     // "-pass",

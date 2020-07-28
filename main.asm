@@ -4,12 +4,8 @@
 
 .include "c64.inc"                      ; c64 constants
 .include "cbm.mac"
-
-.include "src/hardware.asm"
 .include "src/irq_macros.asm"
-.include "src/vic.asm"
-.include "src/cia.asm"
-.include "src/memory.asm"
+
 
 ;========================================================================
 ; Entry Point
@@ -31,8 +27,8 @@ init:
         sty cia1_icr               ; CIA1_ICR
         sty cia2_icr               ; CIA2_ICR
 
-        vicSelectScreenMemory 13
-        vicSelectCharMemory 7          ; $3800
+        ; vicSelectScreenMemory 13
+        ; vicSelectCharMemory 7          ; $3800
         ; +vicSetMultiColorMode
         lda #3
         sta vic_cbg
@@ -54,10 +50,13 @@ addRasterCall:
 
 irq:
         dec $d019
-        vicCopyColors colorData
+        ; vicCopyColors colorData
         ; vicCopyMap mapData, 21*2, 14*2
         ; Set up Color Ram
 
         jmp $ea81
 
 .include "src/init.asm"
+.include "src/hardware.asm"
+.include "src/vic.asm"
+.include "src/cia.asm"

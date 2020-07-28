@@ -12,7 +12,7 @@
     {
       "label": "Clean Tests",
       "type": "shell",
-      "command": "rm -f build/* || true",
+      "command": "rm -f build/* main test-suite || true",
       "problemMatcher": []
     },
     {
@@ -24,7 +24,7 @@
         "--asm-include-dir vendor/cc65/asminc",
         "--asm-include-dir vendor/cc65/libsrc",
         "-L vendor/cc65/lib",
-        "-Ln build/main.sym",
+        "-Ln build/main.labels",
         "-u __EXEHDR__",
         "-t c64",
         "-C c64-asm.cfg",
@@ -47,6 +47,8 @@
         "-t c64",
         "--asm-include-dir vendor/cc65/asminc",
         "-L vendor/cc65/lib",
+        "-Ln build/test-suite.labels",
+    // "-prg", sessionState.prgfilename,
         // "-I vendor/c64unit/cross-assemblers/ca65",
         // "-I tests/test-cases",
         // "-I src",
@@ -128,11 +130,38 @@
           "message": 3
         }
       }
+    },
+    {
+      "label": "test-debug",
+      "dependsOn": ["Build Tests"],
+      "isBackground": true,
+      "command": [
+        "./bin/c64-debugger.sh"
+      ],
+      "args": [
+        "build/test-suite.prg",
+        "build/test-suite.labels"
+        // TODO: Add symbols
+      ],
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "run-debug",
+      "dependsOn": ["Build Main"],
+      "isBackground": true,
+      "command": [
+        "./bin/c64-debugger.sh"
+      ],
+      "args": [
+        "${workspaceFolder}/build/main.prg",
+        "${workspaceFolder}/build/main.labels"
+        // TODO: Add symbols
+      ],
+      "problemMatcher": []
     }
     // For C64Debugger
     // "-pass",
     // "-symbols", sessionState.labelsFilename,
-    // "-prg", sessionState.prgfilename,
-    // "-autojmp
   ]
 }

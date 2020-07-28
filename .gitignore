@@ -2,3 +2,5 @@ vendor
 build
 **/*.o
 **/*.prg
+main
+test-suite

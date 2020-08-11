@@ -25,6 +25,7 @@
         "--asm-include-dir vendor/cc65/libsrc",
         "-L vendor/cc65/lib",
         "-Ln build/main.labels",
+        "--listing build/main.listing",
         "-u __EXEHDR__",
         "-t c64",
         "-C c64-asm.cfg",

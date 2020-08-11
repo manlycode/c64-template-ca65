@@ -4,3 +4,5 @@ build
 **/*.prg
 main
 test-suite
+src/vic
+test-suite

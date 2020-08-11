@@ -73,10 +73,10 @@ vic_SCREEN_HEIGHT = 21
 ; Screen Memory pg 102
 ;========================================================================
 .macro vicSelectScreenMemory idx 
-	_vicSelectScreenMemory idx, vic_ram
+	pVicSelectScreenMemory idx, vic_ram
 .endmacro
 
-.macro _vicSelectScreenMemory idx, vic_ram_register
+.macro pVicSelectScreenMemory idx, vic_ram_register
 	lda vic_ram_register
 	and #%00001111	; clear high bits
 	ora #16*idx

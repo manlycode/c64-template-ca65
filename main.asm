@@ -37,6 +37,7 @@ init:
         jsr clearScreenRam
         jsr clearColorRam
 
+
         ; Clear CIA IRQs by reading the registers
         lda cia1_icr            ; CIA1_ICR
         lda cia2_icr            ; CIA2_ICR

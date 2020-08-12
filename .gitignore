@@ -6,3 +6,4 @@ main
 test-suite
 src/vic
 test-suite
+*.bu

@@ -57,6 +57,7 @@
         "-o build/test-suite.prg",
         "test-suite.asm"
       ],
+      "dependsOrder": "sequence",
       "dependsOn": ["Clean Tests"],
       "problemMatcher": ["$ca65", "$ld65", "$ld65-config", "$ld65-unresolved"]
     },
@@ -97,6 +98,7 @@
 
     {
       "label": "run",
+      "dependsOrder": "sequence",
       "dependsOn": ["Build Main", "Launch VICE"],
       "problemMatcher": {
         // The problem is owned by the cpp language service.
@@ -110,14 +112,28 @@
         }
       }
     },
+    {
+      "label": "fix-labels",
+      "isBackground": true,
+      "command": [
+        "./bin/fix-labels.sh"
+      ],
+      "args": [
+        "build/main.labels"
+      ],
+      "group": "test",
+      "problemMatcher": []
+    },
 
     {
       "label": "debug",
+      "dependsOrder": "sequence",
       "dependsOn": ["Build Main", "Launch VICE"]
     },
 
     {
       "label": "test",
+      "dependsOrder": "sequence",
       "dependsOn": ["Build Tests", "Launch Tests"],
       "group": "test",
       "problemMatcher": {
@@ -147,9 +163,11 @@
       "group": "test",
       "problemMatcher": []
     },
+
     {
       "label": "run-debug",
-      "dependsOn": ["Build Main"],
+      "dependsOrder": "sequence",
+      "dependsOn": ["Build Main", "fix-labels"],
       "isBackground": true,
       "command": [
         "./bin/c64-debugger.sh"
@@ -157,7 +175,6 @@
       "args": [
         "${workspaceFolder}/build/main.prg",
         "${workspaceFolder}/build/main.labels"
-        // TODO: Add symbols
       ],
       "problemMatcher": []
     }

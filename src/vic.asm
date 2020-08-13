@@ -1,4 +1,4 @@
-	; register addresses
+; register addresses
 vic_xs0		= $d000
 vic_ys0		= $d001
 vic_xs1		= $d002
@@ -184,3 +184,48 @@ loopCopyMap
 	jmp loopCopyMap
 copyEnd:
 .endmacro 
+
+.macro	pcopyMapInit aMapPtr, aScreenPtr, aMapWidth, aMapHeight, aScreenWidth, aScreenHeight, mStrtX, mStrtY, scrnStrtX, scrnStrtY
+
+        savePointer aMapPtr, mapPtr
+        savePointer aScreenPtr, screenPtr
+        
+        ; set map dimensions
+        lda #aMapWidth
+        sta mapWidth
+        lda #aMapHeight
+        sta mapHeight
+
+        ; set screen dimensions
+        lda #aScreenWidth
+        sta screenWidth
+        lda #aScreenHeight
+        sta screenHeight
+
+        lda #((mStrtY*aMapWidth)+mStrtX)
+        sta mapIdx
+
+        lda #((scrnStrtY*aScreenWidth)+scrnStrtX)
+        sta screenIdx       
+.endmacro
+
+
+.CODE
+screenPtr: .byte $00, $00
+screenWidth:  .byte $00
+screenHeight: .byte $00
+screenIdx: .byte $00
+
+mapPtr: .byte $00, $00
+mapWidth:  .byte $00
+mapHeight: .byte $00
+mapIdx: .byte $00
+
+; screenIdx: .byte $00
+; screenIdxRem: .byte $00
+
+; mapIdx: .byte $00
+; mapIdxRem: .byte $00
+
+
+

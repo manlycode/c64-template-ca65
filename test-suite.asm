@@ -8,13 +8,17 @@
 	; Examine test cases
 	examineTest testSumToZeroPage
 	examineTest testSumToZeroPageWithDataSet
+	examineTest testCopyMapInit
 	
 	; If this point is reached, there were no assertion fails
 	c64unitExit
 	
 	; Include domain logic, i.e. classes, methods and tables
 	.include "src/sum-to-zero-page.asm"
+	.include "src/pointer-macros.asm"
+	.include "src/vic.asm"
 	
 	; Testsuite with all test cases
 	.include "tests/test-cases/sum-to-zero-page/test.asm"
 	.include "tests/test-cases/sum-to-zero-page-with-data-set/test.asm"
+	.include "tests/test-cases/vic/copy-map.asm"

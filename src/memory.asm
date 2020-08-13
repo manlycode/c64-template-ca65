@@ -34,14 +34,15 @@ tempParam9  = $FE
         ; $0801 is where code starts
 
 
-.segment "CHARDATA"
-        .incbin "assets/tiles-charset.bin", 0, $180
 .DATA
 mapData:
         .incbin "assets/tiles-map.bin"
 
 colorData:
         .incbin "assets/tiles-colors.bin"
+        
+charData:
+        .incbin "assets/tiles-charset.bin", 0, $180
 
 .segment "SIDDATA"
 .segment "SPRITEDATA"

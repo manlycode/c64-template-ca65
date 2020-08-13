@@ -124,6 +124,18 @@
       "group": "test",
       "problemMatcher": []
     },
+    {
+      "label": "fix-test-labels",
+      "isBackground": true,
+      "command": [
+        "./bin/fix-labels.sh"
+      ],
+      "args": [
+        "build/test-suite.labels"
+      ],
+      "group": "test",
+      "problemMatcher": []
+    },
 
     {
       "label": "debug",
@@ -150,14 +162,15 @@
     },
     {
       "label": "test-debug",
-      "dependsOn": ["Build Tests"],
+      "dependsOn": ["Build Tests", "fix-test-labels"],
       "isBackground": true,
       "command": [
         "./bin/c64-debugger.sh"
       ],
       "args": [
         "build/test-suite.prg",
-        "build/test-suite.labels"
+        "build/test-suite.labels",
+        "${workspaceFolder}/test.brk"
         // TODO: Add symbols
       ],
       "group": "test",
@@ -174,7 +187,8 @@
       ],
       "args": [
         "${workspaceFolder}/build/main.prg",
-        "${workspaceFolder}/build/main.labels"
+        "${workspaceFolder}/build/main.labels",
+        "${workspaceFolder}/main.brk"
       ],
       "problemMatcher": []
     }

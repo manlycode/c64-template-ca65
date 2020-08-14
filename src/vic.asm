@@ -222,15 +222,16 @@ copyEnd:
 .CODE
 screenPtr = tempPtr1
 mapPtr = tempPtr2
-mapWidth = tempParam1
-mapHeight = tempParam2
-mapIdx = tempParam3
-screenWidth = tempParam4
-screenHeight = tempParam5
-screenIdx = tempParam6
 
+mapIdx: .byte $00
+mapWidth: .byte $00
+mapHeight: .byte $00
 mapX: .byte $00
 mapY: .byte $00
+
+screenIdx: .byte $00
+screenWidth: .byte $00
+screenHeight: .byte $00
 screenX: .byte $00
 screenY: .byte $00
 
@@ -242,8 +243,22 @@ copyMap:
   inc screenIdx
   inc mapIdx
 @checkMapBounds:
-
-
+  inc mapX
+  clc
+  clv
+  lda mapX
+  cmp mapWidth
+  beq @endCopyMap
+  ; else adjust to next row
+@checkScreenBounds:
+  inc screenX
+  clc
+  clv
+  lda screenX
+  cmp screenWidth
+  beq @endCopyMap
+  ;else adjust to next row
+  jmp copyMap
 
 @endCopyMap:
   rts

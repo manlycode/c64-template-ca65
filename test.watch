@@ -1,0 +1,10 @@
+083F .mapIdx
+0840 .mapWidth
+0841 .mapHeight
+0842 .mapX
+0843 .mapY
+0844 .screenIdx
+0845 .screenWidth
+0846 .screenHeight
+0847 .screenX
+0848 .screenY

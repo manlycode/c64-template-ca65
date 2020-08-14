@@ -1,4 +1,5 @@
 
+	.debuginfo +
 	; Include c64unit
   .include "vendor/c64unit/cross-assemblers/ca65/core2000.asm"
 	

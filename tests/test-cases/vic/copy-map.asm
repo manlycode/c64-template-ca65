@@ -10,7 +10,7 @@ testCopyMap: .scope
         rts
 
 expectedScreenData:
-  .byte $06, $00, $00
+  .byte $06, $07, $08
   .byte $00, $00, $00
   .byte $00, $00, $00
 

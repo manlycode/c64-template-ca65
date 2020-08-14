@@ -44,17 +44,17 @@
       },
       "command": [
         "vendor/cc65/bin/cl65",
+        "-o build/test-suite.prg",
+        "--asm-include-dir vendor/cc65/asminc",
+        "-Ln build/test-suite.labels",
         "-Oir",
         "-t c64",
-        "--asm-include-dir vendor/cc65/asminc",
         "-L vendor/cc65/lib",
-        "-Ln build/test-suite.labels",
     // "-prg", sessionState.prgfilename,
         // "-I vendor/c64unit/cross-assemblers/ca65",
         // "-I tests/test-cases",
         // "-I src",
         "-C tests/c64unit.cfg",
-        "-o build/test-suite.prg",
         "test-suite.asm"
       ],
       "dependsOrder": "sequence",
@@ -162,6 +162,7 @@
     },
     {
       "label": "test-debug",
+      "dependsOrder": "sequence",
       "dependsOn": ["Build Tests", "fix-test-labels"],
       "isBackground": true,
       "command": [
@@ -170,7 +171,8 @@
       "args": [
         "build/test-suite.prg",
         "build/test-suite.labels",
-        "${workspaceFolder}/test.brk"
+        "${workspaceFolder}/test.brk",
+        "${workspaceFolder}/test.watch"
         // TODO: Add symbols
       ],
       "group": "test",
@@ -188,7 +190,8 @@
       "args": [
         "${workspaceFolder}/build/main.prg",
         "${workspaceFolder}/build/main.labels",
-        "${workspaceFolder}/main.brk"
+        "${workspaceFolder}/main.brk",
+        "${workspaceFolder}/main.watch"
       ],
       "problemMatcher": []
     }

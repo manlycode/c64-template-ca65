@@ -4,15 +4,9 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Clean Main",
+      "label": "Clean",
       "type": "shell",
-      "command": "rm -f build/* || true",
-      "problemMatcher": []
-    },
-    {
-      "label": "Clean Tests",
-      "type": "shell",
-      "command": "rm -f build/* main test-suite || true",
+      "command": "rm -f build/ main test-suite|| true",
       "problemMatcher": []
     },
     {
@@ -32,7 +26,64 @@
         "main.asm"
       ],
       "dependsOn": ["Clean Main"],
-      "problemMatcher": ["$ca65", "$ld65", "$ld65-config", "$ld65-unresolved"]
+      "problemMatcher": [
+          {
+              "owner": "ca65",
+              "fileLocation": "relative",
+              "pattern": [
+                  {
+                      "regexp": "^(.+)\\((\\d+)\\):\\s+(Error|Warning|Note):\\s+(.+)$",
+                      "file": 1,
+                      "line": 2,
+                      "severity": 3,
+                      "message": 4
+                  }
+              ]
+          },
+          {
+              "owner": "ca65",
+              "fileLocation": "relative",
+              "pattern": [
+                  {
+                      "regexp": "(Unresolved external `(.*)') referenced in:\\s*$",
+                      "message": 1,
+                      "code": 2
+                  },
+                  {
+                      "regexp": "\\s*(.*)\\((\\d+)\\)",
+                      "file": 1,
+                      "line": 2,
+                      "loop": true
+                  }
+              ]
+          },
+          {
+              "owner": "ca65",
+              "fileLocation": "relative",
+              "pattern": [
+                  {
+                      "regexp": "^ld65: (.*?): ((.*\\.cfg)\\((\\d+)\\): )?(.*)$",
+                      "severity": 1,
+                      "file": 3,
+                      "line": 4,
+                      "message": 5
+                  }
+              ]
+          },
+          {
+              "owner": "ca65",
+              "fileLocation": "relative",
+              "pattern": [
+                  {
+                      "regexp": "^ld65: (.*?): ((.*)\\((\\d+)\\): )?(.*)$",
+                      "severity": 1,
+                      "file": 3,
+                      "line": 4,
+                      "message": 5
+                  }
+              ]
+          }
+      ]
     },
     {
       "label": "Build Tests",
@@ -50,7 +101,7 @@
         "-Oir",
         "-t c64",
         "-L vendor/cc65/lib",
-    // "-prg", sessionState.prgfilename,
+        // "-prg", sessionState.prgfilename,
         // "-I vendor/c64unit/cross-assemblers/ca65",
         // "-I tests/test-cases",
         // "-I src",
@@ -58,8 +109,74 @@
         "test-suite.asm"
       ],
       "dependsOrder": "sequence",
-      "dependsOn": ["Clean Tests"],
-      "problemMatcher": ["$ca65", "$ld65", "$ld65-config", "$ld65-unresolved"]
+      "dependsOn": ["Clean"],
+      "problemMatcher": [
+        {
+            "owner": "ca65",
+            "fileLocation": "relative",
+            "pattern": [
+                {
+                    "regexp": "^(.+)\\((\\d+)\\):\\s+(Error|Warning|Note):\\s+(.+)$",
+                    "file": 1,
+                    "line": 2,
+                    "severity": 3,
+                    "message": 4
+                }
+            ]
+        },
+        {
+            "owner": "ca65",
+            "fileLocation": "relative",
+            "pattern": [
+                {
+                    "regexp": "(Unresolved external `(.*)') referenced in:\\s*$",
+                    "message": 1,
+                    "code": 2
+                },
+                {
+                    "regexp": "\\s*(.*)\\((\\d+)\\)",
+                    "file": 1,
+                    "line": 2,
+                    "loop": true
+                }
+            ]
+        },
+        {
+            "owner": "ca65",
+            "fileLocation": "relative",
+            "pattern": [
+                {
+                    "regexp": "^ld65: (.*?): ((.*\\.cfg)\\((\\d+)\\): )?(.*)$",
+                    "severity": 1,
+                    "file": 3,
+                    "line": 4,
+                    "message": 5
+                }
+            ]
+        },
+        {
+            "owner": "ca65",
+            "fileLocation": "relative",
+            "pattern": [
+                {
+                    "regexp": "^ld65: (.*?): ((.*)\\((\\d+)\\): )?(.*)$",
+                    "severity": 1,
+                    "file": 3,
+                    "line": 4,
+                    "message": 5
+                }
+            ]
+        }
+    ],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false,
+        "revealProblems": "onProblem"
+      }
     },
 
     {
@@ -86,7 +203,7 @@
       "problemMatcher": {
         // The problem is owned by the cpp language service.
         "owner": "x64sc",
-        "fileLocation": ["relative", "${workspaceFolder}"],
+        "fileLocation": ["autoDetect"],
         "pattern": {
           "regexp": "^.+(Error|Warning) - `(.+)' (.+)$",
           "severity": 1,
@@ -121,7 +238,6 @@
       "args": [
         "build/main.labels"
       ],
-      "group": "test",
       "problemMatcher": []
     },
     {
@@ -133,7 +249,6 @@
       "args": [
         "build/test-suite.labels"
       ],
-      "group": "test",
       "problemMatcher": []
     },
 
@@ -147,7 +262,6 @@
       "label": "test",
       "dependsOrder": "sequence",
       "dependsOn": ["Build Tests", "Launch Tests"],
-      "group": "test",
       "problemMatcher": {
         // The problem is owned by the cpp language service.
         "owner": "x64sc",
@@ -161,7 +275,7 @@
       }
     },
     {
-      "label": "test-debug",
+      "label": "Run Test (C64Debugger)",
       "dependsOrder": "sequence",
       "dependsOn": ["Build Tests", "fix-test-labels"],
       "isBackground": true,
@@ -173,14 +287,16 @@
         "build/test-suite.labels",
         "${workspaceFolder}/test.brk",
         "${workspaceFolder}/test.watch"
-        // TODO: Add symbols
       ],
-      "group": "test",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
       "problemMatcher": []
     },
 
     {
-      "label": "run-debug",
+      "label": "Debug (C64Debugger)",
       "dependsOrder": "sequence",
       "dependsOn": ["Build Main", "fix-labels"],
       "isBackground": true,

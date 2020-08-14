@@ -1,4 +1,4 @@
-.ZEROPAGE
+; .ZEROPAGE
 ;========================================================================
 ; $00-$FF Zero Page 
 ;------------------------------------------------------------------------
@@ -34,18 +34,18 @@ tempParam9  = $FE
         ; $0801 is where code starts
 
 
-.DATA
-mapData:
-        .incbin "assets/tiles-map.bin"
+; .DATA
+; mapData:
+;         .incbin "assets/tiles-map.bin"
 
-colorData:
-        .incbin "assets/tiles-colors.bin"
+; colorData:
+;         .incbin "assets/tiles-colors.bin"
         
-charData:
-        .incbin "assets/tiles-charset.bin", 0, $180
+; charData:
+;         .incbin "assets/tiles-charset.bin", 0, $180
 
-.segment "SIDDATA"
-.segment "SPRITEDATA"
+; .segment "SIDDATA"
+; .segment "SPRITEDATA"
 ;------------------------------------------------------------------------
 ; Video Bank 1 $4000 - $7fff (16K)
 ;------------------------------------------------------------------------

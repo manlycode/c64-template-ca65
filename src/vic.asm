@@ -185,8 +185,7 @@ loopCopyMap
 copyEnd:
 .endmacro 
 
-.macro	pcopyMapInit aMapPtr, aScreenPtr, aMapWidth, aMapHeight, aScreenWidth, aScreenHeight, mStrtX, mStrtY, scrnStrtX, scrnStrtY
-
+.macro	copyMapInit aMapPtr, aScreenPtr, aMapWidth, aMapHeight, aScreenWidth, aScreenHeight, mStrtX, mStrtY, scrnStrtX, scrnStrtY
         savePointer aMapPtr, mapPtr
         savePointer aScreenPtr, screenPtr
         
@@ -211,21 +210,20 @@ copyEnd:
 
 
 .CODE
-screenPtr: .byte $00, $00
+; screenPtr: .byte $00, $00
+screenPtr = tempPtr1
+mapPtr = tempPtr2
 screenWidth:  .byte $00
 screenHeight: .byte $00
 screenIdx: .byte $00
-
-mapPtr: .byte $00, $00
+; mapPtr: .byte $00, $00
 mapWidth:  .byte $00
 mapHeight: .byte $00
 mapIdx: .byte $00
 
-; screenIdx: .byte $00
-; screenIdxRem: .byte $00
-
-; mapIdx: .byte $00
-; mapIdxRem: .byte $00
-
-
-
+copyMap:
+	ldy mapIdx
+	lda (mapPtr),y
+	ldy screenIdx
+	sta (screenPtr),y
+	rts

@@ -11,20 +11,32 @@ testCopyMapInit: .scope
 
         assertEqual #5, mapWidth
         assertEqual #5, mapHeight
+        assertEqual #0, mapX
+        assertEqual #0, mapY
 
         assertEqual #3, screenWidth
         assertEqual #2, screenHeight
+        assertEqual #0, screenX
+        assertEqual #0, screenY
 
         assertEqual #0, mapIdx
         assertEqual #0, screenIdx
 
         copyMapInit mapData, screenData, 5, 5, 3, 2, 2, 0, 1, 0
 
+        assertEqual #2, mapX
+        assertEqual #0, mapY
+        assertEqual #1, screenX
+        assertEqual #0, screenY
         assertEqual #2, mapIdx
         assertEqual #1, screenIdx
 
         copyMapInit mapData, screenData, 5, 5, 3, 2, 2, 1, 1, 1
 
+        assertEqual #2, mapX
+        assertEqual #1, mapY
+        assertEqual #1, screenX
+        assertEqual #1, screenY
         assertEqual #7, mapIdx
         assertEqual #4, screenIdx
         

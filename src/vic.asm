@@ -56,71 +56,71 @@ vic_SCREEN_HEIGHT = 21
 ; so be careful not to write to it accidentally in a C64 program!
 
 .macro vicSelectBank bankNum
-	_selectBank bankNum, $dd02, $dd00
+  _selectBank bankNum, $dd02, $dd00
 .endmacro
 
 .macro _selectBank bankNum, cia_data_direction, cia_pra
-	lda cia_data_direction
-	ora #$03
-	sta cia_data_direction
-	lda cia_pra
-	and %11111100
-	ora #3-bankNum
-	sta cia_pra
+  lda cia_data_direction
+  ora #$03
+  sta cia_data_direction
+  lda cia_pra
+  and %11111100
+  ora #3-bankNum
+  sta cia_pra
 .endmacro
 
 ;========================================================================
 ; Screen Memory pg 102
 ;========================================================================
 .macro vicSelectScreenMemory idx 
-	pVicSelectScreenMemory idx, vic_ram
+  pVicSelectScreenMemory idx, vic_ram
 .endmacro
 
 .macro pVicSelectScreenMemory idx, vic_ram_register
-	lda vic_ram_register
-	and #%00001111	; clear high bits
-	ora #16*idx
-	sta vic_ram_register
+  lda vic_ram_register
+  and #%00001111	; clear high bits
+  ora #16*idx
+  sta vic_ram_register
 .endmacro
 ;========================================================================
 ; Character Memory pg 103 - 106
 ;========================================================================
 .macro vicSelectCharMemory idx
-	_vicSelectCharMemory idx, vic_ram
+  _vicSelectCharMemory idx, vic_ram
 .endmacro
 
 .macro _vicSelectCharMemory idx, vic_ram_register
-	lda vic_ram_register
-	and #%11110001	; clear bits 3-1
-	ora #2*idx
-	sta vic_ram_register
+  lda vic_ram_register
+  and #%11110001	; clear bits 3-1
+  ora #2*idx
+  sta vic_ram_register
 .endmacro
 
 ;========================================================================
 ; Multi-color Mode pg 115
 ;========================================================================
 .macro vicSetMultiColorMode
-	lda vic_controlh
-	ora #%00010000
-	sta vic_controlh
+  lda vic_controlh
+  ora #%00010000
+  sta vic_controlh
 .endmacro
 
 .macro vicSetStandardCharacterMode
-	lda vic_controlh
-	and #%11101111
-	sta vic_controlh
+  lda vic_controlh
+  and #%11101111
+  sta vic_controlh
 .endmacro
 
 ;========================================================================
 ; Color RAM
 ;========================================================================
 .macro vicCopyColors source
-	ldx #0
+  ldx #0
 copyColorsLoop:
-	lda source,x
-	sta COLOR_RAM,x
-	inx
-	bne copyColorsLoop
+  lda source,x
+  sta COLOR_RAM,x
+  inx
+  bne copyColorsLoop
 .endmacro
 
 
@@ -128,60 +128,60 @@ copyColorsLoop:
 ; Maps (to support vChar64 - https://githubcom/ricardoquesada/vchar64)
 ;========================================================================
 .macro _vicCopyMap source, sourceWidth, sourceHeight, dest, destWidth, destHeight
-	overlapX = sourceWidth - destWidth
-	overlapY = sourceHeight- destHeight
+  overlapX = sourceWidth - destWidth
+  overlapY = sourceHeight- destHeight
 
-	lda #<source
-	ldx #>source
-	sta tempPtr1
-	stx tempPtr1+1
+  lda #<source
+  ldx #>source
+  sta tempPtr1
+  stx tempPtr1+1
 
-	lda #<dest
-	ldx #>dest
-	sta tempPtr2
-	stx tempPtr2+1
+  lda #<dest
+  ldx #>dest
+  sta tempPtr2
+  stx tempPtr2+1
 
-	lda #sourceWidth
-	sta tempParam1
-	lda #sourceHeight
-	sta tempParam2
-	lda #destWidth
-	sta tempParam3
-	lda #destHeight
-	sta tempParam4
+  lda #sourceWidth
+  sta tempParam1
+  lda #sourceHeight
+  sta tempParam2
+  lda #destWidth
+  sta tempParam3
+  lda #destHeight
+  sta tempParam4
 
 doCopyMemory
-	mapIdx = tempParam5
-	screenIdx = tempParam6
+  mapIdx = tempParam5
+  screenIdx = tempParam6
 
-	lda $0
-	sta tempParam5	; mapIdx
-	lda $0
-	sta tempParam6	; screenIdx
+  lda $0
+  sta tempParam5	; mapIdx
+  lda $0
+  sta tempParam6	; screenIdx
 
-	; tempPtr1 -> source
-	; tempPtr2 -> dest
+  ; tempPtr1 -> source
+  ; tempPtr2 -> dest
 loopCopyMap
-	ldy mapIdx
-	lda (tempPtr1), y
-	ldy screenIdx
-	sta (tempPtr2), y
+  ldy mapIdx
+  lda (tempPtr1), y
+  ldy screenIdx
+  sta (tempPtr2), y
 
-	clc
-	clv
-	inc mapIdx
-	ldx tempParam1
-	cpx mapIdx
-	beq copyEnd
+  clc
+  clv
+  inc mapIdx
+  ldx tempParam1
+  cpx mapIdx
+  beq copyEnd
 
-	clc
-	clv
-	inc screenIdx
-	ldx tempParam2
-	cpx screenIdx
-	beq copyEnd
+  clc
+  clv
+  inc screenIdx
+  ldx tempParam2
+  cpx screenIdx
+  beq copyEnd
 
-	jmp loopCopyMap
+  jmp loopCopyMap
 copyEnd:
 .endmacro 
 
@@ -201,6 +201,16 @@ copyEnd:
         lda #aScreenHeight
         sta screenHeight
 
+        lda #mStrtX
+        sta mapX
+        lda #mStrtY
+        sta mapY
+
+        lda #scrnStrtX
+        sta screenX
+        lda #scrnStrtY
+        sta screenY
+
         lda #((mStrtY*aMapWidth)+mStrtX)
         sta mapIdx
 
@@ -210,20 +220,30 @@ copyEnd:
 
 
 .CODE
-; screenPtr: .byte $00, $00
 screenPtr = tempPtr1
 mapPtr = tempPtr2
-screenWidth:  .byte $00
-screenHeight: .byte $00
-screenIdx: .byte $00
-; mapPtr: .byte $00, $00
-mapWidth:  .byte $00
-mapHeight: .byte $00
-mapIdx: .byte $00
+mapWidth = tempParam1
+mapHeight = tempParam2
+mapIdx = tempParam3
+screenWidth = tempParam4
+screenHeight = tempParam5
+screenIdx = tempParam6
+
+mapX: .byte $00
+mapY: .byte $00
+screenX: .byte $00
+screenY: .byte $00
 
 copyMap:
-	ldy mapIdx
-	lda (mapPtr),y
-	ldy screenIdx
-	sta (screenPtr),y
-	rts
+  ldy mapIdx
+  lda (mapPtr),y
+  ldy screenIdx
+  sta (screenPtr),y
+  inc screenIdx
+  inc mapIdx
+@checkMapBounds:
+
+
+
+@endCopyMap:
+  rts

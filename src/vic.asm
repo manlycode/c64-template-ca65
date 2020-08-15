@@ -203,11 +203,13 @@ copyEnd:
 
         lda #mStrtX
         sta mapX
+        sta mapStartX
         lda #mStrtY
         sta mapY
 
         lda #scrnStrtX
         sta screenX
+        sta screenStartX
         lda #scrnStrtY
         sta screenY
 
@@ -216,6 +218,9 @@ copyEnd:
 
         lda #((scrnStrtY*aScreenWidth)+scrnStrtX)
         sta screenIdx       
+
+        lda #(aMapWidth-aScreenWidth)
+        sta mapOverlapX
 .endmacro
 
 
@@ -226,12 +231,15 @@ mapPtr = tempPtr2
 mapIdx: .byte $00
 mapWidth: .byte $00
 mapHeight: .byte $00
+mapStartX: .byte $00
 mapX: .byte $00
 mapY: .byte $00
+mapOverlapX: .byte $00
 
 screenIdx: .byte $00
 screenWidth: .byte $00
 screenHeight: .byte $00
+screenStartX: .byte $00
 screenX: .byte $00
 screenY: .byte $00
 
@@ -240,25 +248,46 @@ copyMap:
   lda (mapPtr),y
   ldy screenIdx
   sta (screenPtr),y
-  inc screenIdx
   inc mapIdx
-@checkMapBounds:
+  inc screenIdx
   inc mapX
-  clc
-  clv
-  lda mapX
-  cmp mapWidth
-  beq @endCopyMap
-  ; else adjust to next row
-@checkScreenBounds:
   inc screenX
+@checkScreenBoundsX:
   clc
   clv
   lda screenX
   cmp screenWidth
-  beq @endCopyMap
+  bne @checkMapBoundsX
   ;else adjust to next row
-  jmp copyMap
+  lda screenStartX
+  sta screenX
+
+  ; TODO calculate and adjust map idx
+  lda mapIdx
+  clc
+  adc mapOverlapX
+  sta mapIdx
+  lda mapStartX
+  sta mapX
+
+  inc screenY
+  inc mapY
+@checkScreenBoundsY:
+  clc
+  clv
+  lda screenY
+  cmp screenHeight
+  beq @endCopyMap
+
+@checkMapBoundsX:
+  clc
+  clv
+  lda mapX
+  cmp mapWidth
+  bne copyMap
+
+  ; TODO: calculate and adjust screen idx
+  lda screenIdx
 
 @endCopyMap:
   rts

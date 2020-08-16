@@ -11,6 +11,7 @@
 	examineTest testSumToZeroPageWithDataSet
 	examineTest testCopyMapInit
 	examineTest testCopyMap
+	examineTest testCopyTile
 	
 	; If this point is reached, there were no assertion fails
 	c64unitExit
@@ -20,6 +21,7 @@
 	.include "src/sum-to-zero-page.asm"
 	.include "src/pointer-macros.asm"
 	.include "src/vic.asm"
+	.include "src/vchar.asm"
 	
 	; Testsuite with all test cases
 	.include "tests/test-cases/sum-to-zero-page/test.asm"

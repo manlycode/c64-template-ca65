@@ -5,6 +5,7 @@
 		}
 	],
 	"settings": {
-		"search.useIgnoreFiles": false
+		"search.useIgnoreFiles": false,
+		"editor.tabSize": 8
 	}
 }

@@ -26,3 +26,4 @@
 	.include "tests/test-cases/sum-to-zero-page-with-data-set/test.asm"
 	.include "tests/test-cases/vic/copy-map-init.asm"
 	.include "tests/test-cases/vic/copy-map.asm"
+	.include "tests/test-cases/vchar/test-copy-tile.asm"

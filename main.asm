@@ -6,18 +6,17 @@
 .include "c64.inc"                      ; c64 constants
 .include "cbm.mac"
 .include "src/irq_macros.asm"
-.include "src/vic.asm"
-.include "src/vchar.asm"
 .include "src/pointer-macros.asm"
-.include "src/memory.asm"
 
 ;========================================================================
 ; Entry Point
 ;========================================================================
-jmp init
+
 .CODE
+jmp init
+.include "src/vchar.asm"
+.include "src/vic.asm"
 init:
-        
         jsr disableRunStop        
         sei
 
@@ -32,16 +31,27 @@ init:
         sty cia1_icr               ; CIA1_ICR
         sty cia2_icr               ; CIA2_ICR
 
-        vicSelectScreenMemory 13
+        lda #3
+        sta vic_cbg0
+        vicSetStandardCharacterMode
+        ; vicSetHiRezBitmap
+        vicSelectBank 0
+        ; vicSelectScreenMemory 13        ; $3400
         vicSelectCharMemory 7          ; $3800
-        ; +vicSetMultiColorMode
-
+        
         lda #0
         sta vic_cborder
         jsr clearScreenRam
         jsr clearColorRam
+        ; vicCopyChars charData, $3800
+        ; vicCopyColors colorData
 
-        copyMap2x2 testMap, $0400, testCharset, MAP_COUNT
+        ; copyMapInit mapData, $3400, 42, 28, vic_SCREEN_WIDTH, vic_SCREEN_HEIGHT, 0, 0, 0, 0
+        ; jsr copyMap
+
+        copyMap2x2 mapData, $0400, charsetData
+        ; copyMapInit colorData, $D800, 42, 28, vic_SCREEN_WIDTH, vic_SCREEN_HEIGHT, 0, 0, 0, 0
+        ; jsr copyMap
 
         ; Clear CIA IRQs by reading the registers
         lda cia1_icr            ; CIA1_ICR
@@ -56,6 +66,7 @@ irq:
         dec $d019
         ; Begin Code ----------
 
+
         ; End Code ----------
 
         jmp $ea81
@@ -63,10 +74,12 @@ irq:
 .include "src/init.asm"
 .include "src/hardware.asm"
 .include "src/cia.asm"
-.DATA
-testMap:
+.include "src/memory.asm"
+
+mapData:
         .include "assets/tiles-map.s"
-testCharset:
+charData:
         .include "assets/tiles-charset.s"
-testColors:
+.org $3800
+colorData:
         .include "assets/tiles-colors.s"

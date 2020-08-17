@@ -6,7 +6,7 @@ charIdx: .byte $00
 sourceIdx: .byte $00
 targetIdx: .byte $00
 
-.macro copyMap2x2 Source, Target, Charset, mapSize
+.macro copyMap2x2 Source, Target, Charset
         ; find the index if the char ind
         lda #0
         sta sourceIdx

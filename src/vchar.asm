@@ -3,18 +3,24 @@ copyMap2x2LookupTable:
         .byte 0,4,8,12,16,20,24,28,32,36,37,41
 
 charIdx: .byte $00
+tileColor: .byte $00
 sourceIdx: .byte $00
 targetIdx: .byte $00
 
-.macro copyMap2x2 Source, Target, Charset
-Source2 = Source+120
-Source3 = Source+120*2
-Source4 = Source+120*3
-Source5 = Source+120*4
+.macro copyMap2x2 Source, Target, Charset, Colors
+Source2 = Source+60
+Source3 = Source+60*2
+Source4 = Source+60*3
+Source5 = Source+60*4
 Target2 = Target + 240
 Target3 = Target + 240*2
 Target4 = Target + 240*3
 Target5 = Target + 240*4
+ColorRam = $d800
+ColorRam2 = $d800+240
+ColorRam3 = $d800+240*2
+ColorRam4 = $d800+240*3
+ColorRam5 = $d800+240*4
         ; find the index if the char ind
         lda #0
         sta sourceIdx
@@ -24,6 +30,9 @@ Target5 = Target + 240*4
 
         lda Source,x
         tay
+        lda Colors,y
+        sta tileColor
+
         lda copyMap2x2LookupTable,y
         ldy targetIdx
         sta Target,y
@@ -33,9 +42,16 @@ Target5 = Target + 240*4
         sta Target+40,y
         adc #1
         sta Target+41,y
+        lda tileColor
+        sta ColorRam,y
+        sta ColorRam+1,y
+        sta ColorRam+40,y
+        sta ColorRam+41,y
 
         lda Source2,x
         tay
+        lda Colors,y
+        sta tileColor
         lda copyMap2x2LookupTable,y
         ldy targetIdx
         sta Target2,y
@@ -45,9 +61,16 @@ Target5 = Target + 240*4
         sta Target2+40,y
         adc #1
         sta Target2+41,y
+        lda tileColor
+        sta ColorRam2,y
+        sta ColorRam2+1,y
+        sta ColorRam2+40,y
+        sta ColorRam2+41,y
 
         lda Source3,x
         tay
+        lda Colors,y
+        sta tileColor
         lda copyMap2x2LookupTable,y
         ldy targetIdx
         sta Target3,y
@@ -57,9 +80,16 @@ Target5 = Target + 240*4
         sta Target3+40,y
         adc #1
         sta Target3+41,y
+        lda tileColor
+        sta ColorRam3,y
+        sta ColorRam3+1,y
+        sta ColorRam3+40,y
+        sta ColorRam3+41,y
 
         lda Source4,x
         tay
+        lda Colors,y
+        sta tileColor
         lda copyMap2x2LookupTable,y
         ldy targetIdx
         sta Target4,y
@@ -69,17 +99,27 @@ Target5 = Target + 240*4
         sta Target4+40,y
         adc #1
         sta Target4+41,y
+        lda tileColor
+        sta ColorRam4,y
+        sta ColorRam4+1,y
+        sta ColorRam4+40,y
+        sta ColorRam4+41,y
 
         lda sourceIdx
         cmp #20
         bpl :+
         lda Source5,x
         tay
+        lda Colors,y
+        sta tileColor
         lda copyMap2x2LookupTable,y
         ldy targetIdx
         sta Target5,y
         adc #1
         sta Target5+1,y
+        lda tileColor
+        sta ColorRam5,y
+        sta ColorRam5+1,y
 :
         clc
         clv

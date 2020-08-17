@@ -3,7 +3,7 @@
 ; @return void
 testCopyMap2x2: .scope
         ; test the mapdef struct offsets
-        copyMap2x2 testMap, $3400, testCharset, MAP_COUNT
+        copyMap2x2 testMap, $3400, testCharset, testColors
 
         assertMemoryEqual expectedMap, $3400, 80
         ; assertMemoryEqual expectedMap2, $3400+256, 80

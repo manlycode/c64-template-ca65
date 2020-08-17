@@ -9,8 +9,6 @@
 	; Examine test cases
 	examineTest testSumToZeroPage
 	examineTest testSumToZeroPageWithDataSet
-	examineTest testCopyMapInit
-	examineTest testCopyMap
 	examineTest testCopyMap2x2
 	; If this point is reached, there were no assertion fails
 	c64unitExit
@@ -25,6 +23,4 @@
 	; Testsuite with all test cases
 	.include "tests/test-cases/sum-to-zero-page/test.asm"
 	.include "tests/test-cases/sum-to-zero-page-with-data-set/test.asm"
-	.include "tests/test-cases/vic/copy-map-init.asm"
-	.include "tests/test-cases/vic/copy-map.asm"
 	.include "tests/test-cases/vchar/test-copy-tile.asm"

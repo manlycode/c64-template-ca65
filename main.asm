@@ -49,7 +49,7 @@ init:
         ; copyMapInit mapData, $3400, 42, 28, vic_SCREEN_WIDTH, vic_SCREEN_HEIGHT, 0, 0, 0, 0
         ; jsr copyMap
 
-        copyMap2x2 mapData, $0400, charsetData
+        copyMap2x2 mapData, $0400, charsetData, colorData
         ; copyMapInit colorData, $D800, 42, 28, vic_SCREEN_WIDTH, vic_SCREEN_HEIGHT, 0, 0, 0, 0
         ; jsr copyMap
 

@@ -11,8 +11,7 @@
 	examineTest testSumToZeroPageWithDataSet
 	examineTest testCopyMapInit
 	examineTest testCopyMap
-	examineTest testCopyTile
-	
+	examineTest testCopyMap2x2
 	; If this point is reached, there were no assertion fails
 	c64unitExit
 	

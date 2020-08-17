@@ -43,7 +43,7 @@ init:
         sta vic_cborder
         jsr clearScreenRam
         jsr clearColorRam
-        ; vicCopyChars charData, $3800
+        vicCopyChars charData, $3800
         ; vicCopyColors colorData
 
         ; copyMapInit mapData, $3400, 42, 28, vic_SCREEN_WIDTH, vic_SCREEN_HEIGHT, 0, 0, 0, 0
@@ -80,6 +80,5 @@ mapData:
         .include "assets/tiles-map.s"
 charData:
         .include "assets/tiles-charset.s"
-.org $3800
 colorData:
         .include "assets/tiles-colors.s"

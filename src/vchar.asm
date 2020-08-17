@@ -26,35 +26,77 @@ targetIdx: .byte $00
         adc #1
         sta Target+41,y
 
-        lda Source+180,x
+        lda Source+120,x
         tay
         lda copyMap2x2LookupTable,y
         ldy targetIdx
-        sta Target+256,y
+        sta Target+240,y
         adc #1
-        sta Target+1+256,y
+        sta Target+1+240,y
         adc #1
-        sta Target+40+256,y
+        sta Target+40+240,y
         adc #1
-        sta Target+41+256,y
+        sta Target+41+240,y
 
-        lda Source+180*2,x
+        lda Source+120*2,x
         tay
         lda copyMap2x2LookupTable,y
         ldy targetIdx
-        sta Target+256*2,y
+        sta Target+240*2,y
         adc #1
-        sta Target+1+256*2,y
+        sta Target+1+240*2,y
         adc #1
-        sta Target+40+256*2,y
+        sta Target+40+240*2,y
         adc #1
-        sta Target+41+256*2,y
+        sta Target+41+240*2,y
 
-        inc targetIdx
-        inc targetIdx
+        lda Source+120*3,x
+        tay
+        lda copyMap2x2LookupTable,y
+        ldy targetIdx
+        sta Target+240*3,y
+        adc #1
+        sta Target+1+240*3,y
+        adc #1
+        sta Target+40+240*3,y
+        adc #1
+        sta Target+41+240*3,y
+
+        lda #120
+        tax
+        lda #240
+        tay
+        lda Source+120*3,x
+        tay
+        lda copyMap2x2LookupTable,y
+        ldy targetIdx
+        sta Target+240*3,y
+        adc #1
+        sta Target+1+240*3,y
+        adc #1
+        sta Target+40+240*3,y
+        adc #1
+        sta Target+41+240*3,y
+
         clc
         clv
         inc sourceIdx
-        bne @copyMap2x2Loop
-
+        inc targetIdx
+        inc targetIdx
+        lda sourceIdx
+        cmp #20
+        beq @nextRow
+        cmp #40
+        beq @nextRow
+        cmp #60
+        beq @endMapCopy
+        jmp @copyMap2x2Loop
+@nextRow:
+        lda targetIdx
+        clc    
+        clv
+        adc #40
+        sta targetIdx
+        jmp @copyMap2x2Loop
+@endMapCopy:
 .endmacro

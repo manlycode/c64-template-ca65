@@ -82,6 +82,7 @@ vic_SCREEN_HEIGHT = 21
   ora #16*idx
   sta vic_ram_register
 .endmacro
+
 ;========================================================================
 ; Character Memory pg 103 - 106
 ;========================================================================
@@ -111,6 +112,12 @@ vic_SCREEN_HEIGHT = 21
   sta vic_controlh
 .endmacro
 
+.macro vicSetHiRezBitmap
+  lda vic_controlh
+  ora #32
+  sta vic_controlh
+.endmacro
+
 ;========================================================================
 ; Color RAM
 ;========================================================================
@@ -123,67 +130,15 @@ copyColorsLoop:
   bne copyColorsLoop
 .endmacro
 
+.macro vicCopyChars source, dest
+  ldx #0
+copyCharsLoop:
+  lda source,x
+  sta dest,x
+  inx
+  bne copyCharsLoop
+.endmacro
 
-;========================================================================
-; Maps (to support vChar64 - https://githubcom/ricardoquesada/vchar64)
-;========================================================================
-.macro _vicCopyMap source, sourceWidth, sourceHeight, dest, destWidth, destHeight
-  overlapX = sourceWidth - destWidth
-  overlapY = sourceHeight- destHeight
-
-  lda #<source
-  ldx #>source
-  sta tempPtr1
-  stx tempPtr1+1
-
-  lda #<dest
-  ldx #>dest
-  sta tempPtr2
-  stx tempPtr2+1
-
-  lda #sourceWidth
-  sta tempParam1
-  lda #sourceHeight
-  sta tempParam2
-  lda #destWidth
-  sta tempParam3
-  lda #destHeight
-  sta tempParam4
-
-doCopyMemory
-  mapIdx = tempParam5
-  screenIdx = tempParam6
-
-  lda $0
-  sta tempParam5	; mapIdx
-  lda $0
-  sta tempParam6	; screenIdx
-
-  ; tempPtr1 -> source
-  ; tempPtr2 -> dest
-loopCopyMap
-  ldy mapIdx
-  lda (tempPtr1), y
-  ldy screenIdx
-  sta (tempPtr2), y
-
-  clc
-  clv
-  inc mapIdx
-  ldx tempParam1
-  cpx mapIdx
-  beq copyEnd
-
-  clc
-  clv
-  inc screenIdx
-  ldx tempParam2
-  cpx screenIdx
-  beq copyEnd
-
-  jmp loopCopyMap
-copyEnd:
-.endmacro 
 
 .macro	copyMapInit aMapPtr, aScreenPtr, aMapWidth, aMapHeight, aScreenWidth, aScreenHeight, mStrtX, mStrtY, scrnStrtX, scrnStrtY
         savePointer aMapPtr, mapPtr
@@ -222,3 +177,4 @@ copyEnd:
         lda #(aMapWidth-aScreenWidth)
         sta mapOverlapX
 .endmacro
+

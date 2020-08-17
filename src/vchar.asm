@@ -7,6 +7,14 @@ sourceIdx: .byte $00
 targetIdx: .byte $00
 
 .macro copyMap2x2 Source, Target, Charset
+Source2 = Source+120
+Source3 = Source+120*2
+Source4 = Source+120*3
+Source5 = Source+120*4
+Target2 = Target + 240
+Target3 = Target + 240*2
+Target4 = Target + 240*3
+Target5 = Target + 240*4
         ; find the index if the char ind
         lda #0
         sta sourceIdx
@@ -26,58 +34,53 @@ targetIdx: .byte $00
         adc #1
         sta Target+41,y
 
-        lda Source+120,x
+        lda Source2,x
         tay
         lda copyMap2x2LookupTable,y
         ldy targetIdx
-        sta Target+240,y
+        sta Target2,y
         adc #1
-        sta Target+1+240,y
+        sta Target2+1,y
         adc #1
-        sta Target+40+240,y
+        sta Target2+40,y
         adc #1
-        sta Target+41+240,y
+        sta Target2+41,y
 
-        lda Source+120*2,x
+        lda Source3,x
         tay
         lda copyMap2x2LookupTable,y
         ldy targetIdx
-        sta Target+240*2,y
+        sta Target3,y
         adc #1
-        sta Target+1+240*2,y
+        sta Target3+1,y
         adc #1
-        sta Target+40+240*2,y
+        sta Target3+40,y
         adc #1
-        sta Target+41+240*2,y
+        sta Target3+41,y
 
-        lda Source+120*3,x
+        lda Source4,x
         tay
         lda copyMap2x2LookupTable,y
         ldy targetIdx
-        sta Target+240*3,y
+        sta Target4,y
         adc #1
-        sta Target+1+240*3,y
+        sta Target4+1,y
         adc #1
-        sta Target+40+240*3,y
+        sta Target4+40,y
         adc #1
-        sta Target+41+240*3,y
+        sta Target4+41,y
 
-        lda #120
-        tax
-        lda #240
-        tay
-        lda Source+120*3,x
+        lda sourceIdx
+        cmp #20
+        bpl :+
+        lda Source5,x
         tay
         lda copyMap2x2LookupTable,y
         ldy targetIdx
-        sta Target+240*3,y
+        sta Target5,y
         adc #1
-        sta Target+1+240*3,y
-        adc #1
-        sta Target+40+240*3,y
-        adc #1
-        sta Target+41+240*3,y
-
+        sta Target5+1,y
+:
         clc
         clv
         inc sourceIdx

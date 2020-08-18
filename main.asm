@@ -31,10 +31,16 @@ init:
         sty cia1_icr               ; CIA1_ICR
         sty cia2_icr               ; CIA2_ICR
 
-        lda #3
+        lda #1
         sta vic_cbg0
-        vicSetStandardCharacterMode
-        ; vicSetHiRezBitmap
+        lda #5
+        sta vic_cbg1
+        lda #7
+        sta vic_cbg2
+
+        ; vicSetStandardCharacterMode
+        ;vicSetHiRezBitmap
+        vicSetMultiColorMode
         vicSelectBank 0
         ; vicSelectScreenMemory 13        ; $3400
         vicSelectCharMemory 7          ; $3800
@@ -44,12 +50,12 @@ init:
         jsr clearScreenRam
         jsr clearColorRam
         vicCopyChars charData, $3800
-        ; vicCopyColors colorData
+        vicCopyColors colorData
 
         ; copyMapInit mapData, $3400, 42, 28, vic_SCREEN_WIDTH, vic_SCREEN_HEIGHT, 0, 0, 0, 0
         ; jsr copyMap
 
-        copyMap2x2 mapData, $0400, charsetData, colorData
+        copyMap2x2Multicolor mapData, $0400, charData, colorData, MAP_COUNT, 10
         ; copyMapInit colorData, $D800, 42, 28, vic_SCREEN_WIDTH, vic_SCREEN_HEIGHT, 0, 0, 0, 0
         ; jsr copyMap
 
@@ -77,8 +83,8 @@ irq:
 .include "src/memory.asm"
 
 mapData:
-        .include "assets/tiles-map.s"
-charData:
-        .include "assets/tiles-charset.s"
+        .include "assets/reset-map.s"
 colorData:
-        .include "assets/tiles-colors.s"
+        .include "assets/reset-colors.s"
+charData:
+        .include "assets/reset-charset.s"

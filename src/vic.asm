@@ -135,6 +135,27 @@ copyColorsLoop:
 copyCharsLoop:
   lda source,x
   sta dest,x
+
+  lda source+$100,x
+  sta dest+$100,x
+
+  lda source+$200,x
+  sta dest+$200,x
+
+  lda source+$300,x
+  sta dest+$300,x
+
+  lda source+$400,x
+  sta dest+$400,x
+
+  lda source+$500,x
+  sta dest+$500,x
+
+  lda source+$600,x
+  sta dest+$600,x
+
+  lda source+$700,x
+  sta dest+$700,x
   inx
   bne copyCharsLoop
 .endmacro

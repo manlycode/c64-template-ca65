@@ -152,3 +152,63 @@ ColorRam5 = $d800+240*4
         jmp @copyMap2x2Loop
 @endMapCopy:
 .endmacro
+
+.macro copyMap2x2Multicolor Source, Target, Charset, Colors, MapCount, MapWidth
+Source2 = Source+60
+Source3 = Source+60*2
+Source4 = Source+60*3
+Source5 = Source+60*4
+Target2 = Target + 240
+Target3 = Target + 240*2
+Target4 = Target + 240*3
+Target5 = Target + 240*4
+ColorRam = $d800
+ColorRam2 = $d800+240
+ColorRam3 = $d800+240*2
+ColorRam4 = $d800+240*3
+ColorRam5 = $d800+240*4
+        ; find the index if the char ind
+        lda #0
+        sta sourceIdx
+        sta targetIdx
+@copyMap2x2LoopMulti:
+        ldy targetIdx
+        ldx sourceIdx
+        lda Source,x
+        sta Target,y
+        clc
+        adc #$40
+        sta Target+1,y
+        clc
+        adc #$40
+        sta Target+40,y
+        clc
+        adc #$40
+        sta Target+41,y
+
+        lda Colors,y
+        sta ColorRam,y
+        lda Colors+1,y
+        sta ColorRam+1,y
+        lda Colors+40,y
+        sta ColorRam+40,y
+        lda Colors+41,y
+        sta ColorRam+41,y
+
+        inc targetIdx
+        inc targetIdx
+        inc sourceIdx
+        lda sourceIdx
+        cmp #MapWidth
+        bne :+
+        lda targetIdx
+        clc
+        adc #40
+        sta targetIdx
+        jmp @copyMap2x2LoopMulti
+:       cmp #MapCount
+        beq :+
+        jmp @copyMap2x2LoopMulti
+:       
+
+.endmacro

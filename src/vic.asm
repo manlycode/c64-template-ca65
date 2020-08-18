@@ -118,6 +118,18 @@ vic_SCREEN_HEIGHT = 21
   sta vic_controlh
 .endmacro
 
+.macro set38ColumnMode
+  lda vic_controlh
+  and #247
+  sta vic_controlh
+.endmacro
+
+.macro unset38ColumnMode
+  lda vic_controlh
+  ora #8
+  sta vic_controlh
+.endmacro
+
 ;========================================================================
 ; Color RAM
 ;========================================================================
@@ -199,3 +211,18 @@ copyCharsLoop:
         sta mapOverlapX
 .endmacro
 
+
+.CODE
+scrollVal:
+        .byte $00
+
+.macro updateScroll
+  inc scrollVal
+  lda scrollVal
+  cmp #8
+  bne :+
+  dec scrollVal
+: and #%00000111
+  ora vic_controlh
+  sta vic_controlh
+.endmacro

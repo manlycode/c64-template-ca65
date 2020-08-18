@@ -9,7 +9,9 @@
 	; Examine test cases
 	examineTest testSumToZeroPage
 	examineTest testSumToZeroPageWithDataSet
-	examineTest testCopyMap2x2
+	; examineTest testCopyMap2x2
+	examineTest testInitChars
+	; examineTest testInitColors
 	; If this point is reached, there were no assertion fails
 	c64unitExit
 	
@@ -19,8 +21,11 @@
 	.include "src/pointer-macros.asm"
 	.include "src/vic.asm"
 	.include "src/vchar.asm"
+	.include "src/map.asm"
 	
 	; Testsuite with all test cases
 	.include "tests/test-cases/sum-to-zero-page/test.asm"
 	.include "tests/test-cases/sum-to-zero-page-with-data-set/test.asm"
 	.include "tests/test-cases/vchar/test-copy-tile.asm"
+	.include "tests/test-cases/map/test-init-chars.asm"
+	.include "tests/test-cases/map/test-init-colors.asm"

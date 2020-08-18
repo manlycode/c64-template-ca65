@@ -11,7 +11,7 @@
 	examineTest testSumToZeroPageWithDataSet
 	; examineTest testCopyMap2x2
 	examineTest testInitChars
-	; examineTest testInitColors
+	examineTest testInitColors
 	; If this point is reached, there were no assertion fails
 	c64unitExit
 	

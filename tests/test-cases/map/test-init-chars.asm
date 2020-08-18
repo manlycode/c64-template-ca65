@@ -2,13 +2,17 @@
 ; @return void
 testInitChars: .scope
         mapInitChars chars
-        loadChar 1
-        assertEqualToA #$bb, "loadChar"
+
+        loadChar charIdx
+        assertEqualToA #$ff, "loadChar1"
+
+        inc charIdx
+        loadChar charIdx
+        assertEqualToA #$bb, "loadChar2"
 
         rts
 
+charIdx: .byte $00
 chars:
         .byte $ff,$bb,$cc,$dd
-chars2:
-        .byte $fe,$be,$ce,$de
 .endscope

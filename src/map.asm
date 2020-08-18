@@ -8,33 +8,29 @@ mapIdx: .byte $00
 screenIdx: .byte $00
 mapPtr:    .addr $0000
 screenPtr: .addr $0000
-colorsPtr: .addr $0000
-charsPtr:  .addr $0000
 
-.export mapPtr, screenPtr, charsPtr, colorsPtr
+.export mapPtr, screenPtr
 
 
 ;------------------------------------------------------------------
 ; Subroutines
 ;------------------------------------------------------------------
-.macro mapInitChars     Chars
-chars_ADDR= Chars
+.macro mapInitChars Chars
+        chars_ADDR = Chars
+.endmacro
+
+.macro mapInitColors Colors
+        colors_ADDR = Colors
 .endmacro
 
 .macro loadChar Idx
-        ldx #Idx
+        ldx Idx
         lda chars_ADDR,x
-        
-        ; lda charsPtr
-        ; sta tempPtr1
-        ; lda charsPtr+1
-        ; sta tempPtr1+1
-        ; ldy #Idx
-        ; lda (tempPtr1),y
 .endmacro
 
-
-.macro mapInitColors
+.macro loadColor Idx
+        ldx Idx
+        lda colors_ADDR,x
 .endmacro
 
 .endscope

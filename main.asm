@@ -17,6 +17,7 @@ jmp init
 .include "src/vchar.asm"
 .include "src/vic.asm"
 .include "src/map.asm"
+
 init:
         jsr disableRunStop        
         sei
@@ -32,27 +33,27 @@ init:
         sty cia1_icr               ; CIA1_ICR
         sty cia2_icr               ; CIA2_ICR
 
-        lda #1
+        vicSetMultiColorMode
+        lda #9
         sta vic_cbg0
-        lda #5
+        lda #0
         sta vic_cbg1
-        lda #7
+        lda #15
         sta vic_cbg2
 
-        ; vicSetStandardCharacterMode
-        ;vicSetHiRezBitmap
-        vicSetMultiColorMode
         vicSelectBank 0
-        ; vicSelectScreenMemory 13        ; $3400
-        vicSelectCharMemory 7          ; $3800
+        vicSelectScreenMemory 1        ; $0400
+        vicSelectCharMemory 14         ; $3000
         
         lda #0
         sta vic_cborder
         jsr clearScreenRam
         jsr clearColorRam
-        vicCopyChars charData, $3800
-        vicCopyColors colorData
-
+        lda #0
+        sta vpX
+        vicCopyChars charset, $3000, CHARSET_COUNT
+        vicCopyColors colors
+        copyMap map, MAP_WIDTH, MAP_HEIGHT, 1, 1, charset, CHARSET_COUNT, $0400
         
 
         ; Clear CIA IRQs by reading the registers
@@ -78,9 +79,11 @@ irq:
 .include "src/cia.asm"
 .include "src/memory.asm"
 
-mapData:
-        .include "assets/commando-map.s"
-colorData:
-        .include "assets/commando-colors.s"
-charData:
-        .include "assets/commando-charset.s"
+.include "assets/commando-colors.s"
+.segment "CHAR"
+.include "assets/commando-charset.s"
+.segment "MAP"
+.include "assets/commando-map.s"
+
+
+        

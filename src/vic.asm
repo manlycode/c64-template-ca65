@@ -46,7 +46,7 @@ vic_cs2		= $d029
 vic_cs3		= $d02a
 vic_cs4		= $d02b
 vic_cs5		= $d02c
-vic_cs6		= $d02d
+vic_cs6		= $d02d   
 vic_cs7		= $d02e
 COLOR_RAM	= $d800
 vic_SCREEN_WIDTH = 40
@@ -55,6 +55,14 @@ vic_SCREEN_HEIGHT = 21
 ; They are accessible even in C64 mode and $d030 can garble the video output,
 ; so be careful not to write to it accidentally in a C64 program!
 
+;========================================================================
+; vicSelectBank
+;========================================================================
+; 0 $0000-$3FFF (Default)
+; 1 $4000-$7FFF (Charset not available)
+; 2 $8000-$BFFF
+; 3 $C000-$FFFF (Charset not available)
+;========================================================================
 .macro vicSelectBank bankNum
   _selectBank bankNum, $dd02, $dd00
 .endmacro
@@ -72,6 +80,24 @@ vic_SCREEN_HEIGHT = 21
 ;========================================================================
 ; Screen Memory pg 102
 ;========================================================================
+; Bank - 0         Bank - 1           Bank - 2           Bank - 3       
+; -----------      -------------      -------------      -------------
+; 1  -- $0000      ; 17 -- $4000      ; 33 -- $8000     ; 45 -- $c000
+; 2  -- $0400      ; 18 -- $4400      ; 34 -- $8400     ; 46 -- $c400
+; 3  -- $0800      ; 19 -- $4800      ; 35 -- $8800     ; 47 -- $c800
+; 4  -- $0C00      ; 20 -- $4C00      ; 36 -- $8C00     ; 48 -- $cC00
+; 5  -- $1000      ; 21 -- $5000      ; 37 -- $A000
+; 6  -- $1400      ; 22 -- $5400      ; 38 -- $A400
+; 7  -- $1800      ; 23 -- $5800      ; 39 -- $A800
+; 8  -- $1C00      ; 24 -- $5C00      ; 40 -- $AC00
+; 9  -- $2000      ; 25 -- $6000      ; 41 -- $B000
+; 10 -- $2400      ; 26 -- $6400      ; 42 -- $B400
+; 11 -- $2800      ; 27 -- $6800      ; 43 -- $B800
+; 12 -- $2C00      ; 28 -- $6C00      ; 44 -- $BC00
+; 13 -- $3000      ; 29 -- $7000      
+; 14 -- $3400      ; 30 -- $7400      
+; 15 -- $3800      ; 31 -- $7800      
+; 16 -- $3C00      ; 32 -- $7C00      
 .macro vicSelectScreenMemory idx 
   pVicSelectScreenMemory idx, vic_ram
 .endmacro
@@ -137,12 +163,14 @@ vic_SCREEN_HEIGHT = 21
   ldx #0
 copyColorsLoop:
   lda source,x
-  sta COLOR_RAM,x
+  .repeat 4, I
+  sta COLOR_RAM+(I*$100),x
+  .endrepeat
   inx
   bne copyColorsLoop
 .endmacro
 
-.macro vicCopyChars source, dest
+.macro vicCopyChars source, dest, size
   ldx #0
 copyCharsLoop:
   lda source,x
@@ -168,6 +196,8 @@ copyCharsLoop:
 
   lda source+$700,x
   sta dest+$700,x
+  clc
+  clv
   inx
   bne copyCharsLoop
 .endmacro

@@ -38,7 +38,7 @@ vpY: .byte $00
         lda colors_ADDR,x
 .endmacro
 
-.macro copyMap Map, mapW, mapH, tileW, tileH, Charset, charCOUNT, Colors, colorCOUNT, Screen
+.macro copyMap Map, mapW, mapH, tileW, tileH, Charset, charCOUNT, Screen
         lda vpX
         sta mapIdx
         lda #0

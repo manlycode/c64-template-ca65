@@ -16,6 +16,7 @@
 jmp init
 .include "src/vchar.asm"
 .include "src/vic.asm"
+.include "src/map.asm"
 init:
         jsr disableRunStop        
         sei
@@ -52,12 +53,7 @@ init:
         vicCopyChars charData, $3800
         vicCopyColors colorData
 
-        ; copyMapInit mapData, $3400, 42, 28, vic_SCREEN_WIDTH, vic_SCREEN_HEIGHT, 0, 0, 0, 0
-        ; jsr copyMap
-
-        copyMap2x2Multicolor mapData, $0400, charData, colorData, MAP_COUNT, 10
-        ; copyMapInit colorData, $D800, 42, 28, vic_SCREEN_WIDTH, vic_SCREEN_HEIGHT, 0, 0, 0, 0
-        ; jsr copyMap
+        
 
         ; Clear CIA IRQs by reading the registers
         lda cia1_icr            ; CIA1_ICR
@@ -83,8 +79,8 @@ irq:
 .include "src/memory.asm"
 
 mapData:
-        .include "assets/reset-map.s"
+        .include "assets/commando-map.s"
 colorData:
-        .include "assets/reset-colors.s"
+        .include "assets/commando-colors.s"
 charData:
-        .include "assets/reset-charset.s"
+        .include "assets/commando-charset.s"

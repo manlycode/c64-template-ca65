@@ -217,6 +217,8 @@ scrollVal:
         .byte $00
 
 .macro updateScroll
+  clc
+  clv
   inc scrollVal
   lda scrollVal
   cmp #8

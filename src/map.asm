@@ -39,8 +39,9 @@ vpY: .byte $00
 .endmacro
 
 .macro copyMap Map, mapW, mapH, tileW, tileH, Charset, charCOUNT, Colors, colorCOUNT, Screen
-        lda #0
+        lda vpX
         sta mapIdx
+        lda #0
         sta screenIdx
 
 @loop:
@@ -58,17 +59,6 @@ vpY: .byte $00
         lda screenIdx
         cmp #40
         beq @end
-        beq :+
-        cmp #80
-        beq :+
-        cmp #120
-        beq :+
-        cmp #160
-        beq :+
-        cmp #200
-        beq :+
-        cmp #240
-        beq :+
         ; Not a screen bounds, normal map index inc
         jmp @loop
         

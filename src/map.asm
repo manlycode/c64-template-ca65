@@ -1,41 +1,27 @@
-screenW = 40
-screenH = 25
-
+;------------------------------------------------------------------
+; Constants
+;------------------------------------------------------------------
+SCREEN_W = 40
+SCREEN_H = 25
+;------------------------------------------------------------------
+; Variables
+;------------------------------------------------------------------
 mapIdx: .byte $00
 screenIdx: .byte $00
 vpX: .byte $00
 vpY: .byte $00
-
-.scope map_module
 ;------------------------------------------------------------------
-; Variables
-;------------------------------------------------------------------
-
-
-;------------------------------------------------------------------
-; Subroutines
+; Macros
 ;------------------------------------------------------------------
 .macro copyChars source,target,size
         ldx #0
 :       
-.repeat 8
+        .repeat 8
         lda source,x
         sta target,x
-.endrepeat
+        .endrepeat
         inx
         bne :-
-
-
-.endmacro
-
-.macro loadChar Idx
-        ldx Idx
-        lda chars_ADDR,x
-.endmacro
-
-.macro loadColor Idx
-        ldx Idx
-        lda colors_ADDR,x
 .endmacro
 
 .macro copyMap Map, mapW, mapH, tileW, tileH, Charset, charCOUNT, Screen
@@ -49,7 +35,7 @@ vpY: .byte $00
 
         .repeat (25 / tileH), I
         lda Map+((mapW*tileH)*I),x
-        sta Screen+((screenW*tileH)*I),y
+        sta Screen+((SCREEN_W*tileH)*I),y
         .endrepeat
 
         inc mapIdx
@@ -63,14 +49,11 @@ vpY: .byte $00
         
         clc
         lda mapIdx
-        adc #(screenW .mod mapW)
+        adc #(SCREEN_W .mod mapW)
         sta mapIdx
         jmp :-
 :
-
-
-
 .endmacro
-
-
-.endscope
+;------------------------------------------------------------------
+; Subroutines
+;------------------------------------------------------------------

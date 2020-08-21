@@ -172,8 +172,8 @@ copyColorsLoop:
 
 .macro vicCopyChars source, dest, size
   ldx #0
-copyCharsLoop:
-  lda source,x
+
+: lda source,x
   sta dest,x
 
   .repeat .const(size/256),I
@@ -184,7 +184,7 @@ copyCharsLoop:
   clc
   clv
   inx
-  bne copyCharsLoop
+  bne :-
 .endmacro
 
 .CODE

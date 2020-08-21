@@ -251,10 +251,7 @@ scrollVal:
   clv
   inc scrollVal
   lda scrollVal
-  cmp #8
-  bne :+
-  dec scrollVal
-: and #%00000111
+  and #%00000111
   ora vic_controlh
   sta vic_controlh
 .endmacro

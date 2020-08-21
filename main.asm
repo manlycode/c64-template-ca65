@@ -17,6 +17,7 @@ jmp init
 .include "src/vchar.asm"
 .include "src/vic.asm"
 .include "src/map.asm"
+counter: .byte $00
 
 init:
         jsr disableRunStop        
@@ -33,6 +34,7 @@ init:
         sty cia1_icr               ; CIA1_ICR
         sty cia2_icr               ; CIA2_ICR
 
+        set38ColumnMode
         vicSetMultiColorMode
         lda #9
         sta vic_cbg0
@@ -47,14 +49,14 @@ init:
         
         lda #0
         sta vic_cborder
+        sta scrollVal
         jsr clearScreenRam
         jsr clearColorRam
         lda #0
         sta vpX
         vicCopyChars charset, $3000, CHARSET_COUNT
         vicCopyColors colors
-        copyMap map, MAP_WIDTH, MAP_HEIGHT, 1, 1, charset, CHARSET_COUNT, $0400
-        
+        jsr renderMap
 
         ; Clear CIA IRQs by reading the registers
         lda cia1_icr            ; CIA1_ICR
@@ -68,11 +70,31 @@ addRasterCall:
 irq:
         dec $d019
         ; Begin Code ----------
+        clc
+        clv
+        lda counter
+        cmp #4
+        bne :+
+        lda #$ff
+        sta counter
+        updateScroll
+        ; jsr renderMap
+        ; inc vpX
+:       inc counter
+
+
 
 
         ; End Code ----------
 
         jmp $ea81
+
+
+renderMap:
+        copyMap map, MAP_WIDTH, MAP_HEIGHT, 1, 1, charset, CHARSET_COUNT, $0400
+
+        rts
+
 
 .include "src/init.asm"
 .include "src/hardware.asm"

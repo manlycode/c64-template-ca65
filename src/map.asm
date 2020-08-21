@@ -44,8 +44,7 @@ vpY: .byte $00
         lda #0
         sta screenIdx
 
-@loop:
-        ldy screenIdx
+:       ldy screenIdx
         ldx mapIdx
 
         .repeat (25 / tileH), I
@@ -58,18 +57,16 @@ vpY: .byte $00
         inc screenIdx
         lda screenIdx
         cmp #40
-        beq @end
+        beq :+
         ; Not a screen bounds, normal map index inc
-        jmp @loop
+        jmp :-
         
-:       ; forward the map index
         clc
         lda mapIdx
         adc #(screenW .mod mapW)
         sta mapIdx
-        jmp @loop
-
-@end:
+        jmp :-
+:
 
 
 

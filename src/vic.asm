@@ -170,13 +170,13 @@ copyColorsLoop:
   bne copyColorsLoop
 .endmacro
 
-.macro vicCopyChars source, dest, size
+.macro vicCopyChars source, dest, SIZE
   ldx #0
 
 : lda source,x
   sta dest,x
 
-  .repeat .const(size/256),I
+  .repeat (SIZE/256),I
   lda source+(I*$100),x
   sta dest+(I*$100),x
   .endrepeat

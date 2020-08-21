@@ -34,7 +34,7 @@ vpY: .byte $00
         ldx mapIdx
 
         .repeat (25 / tileH), I
-        lda Map+((mapW*tileH)*I),x
+        lda Map+(mapW*tileH*I),x
         sta Screen+((SCREEN_W*tileH)*I),y
         .endrepeat
 

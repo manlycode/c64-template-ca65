@@ -8,6 +8,10 @@
 .include "src/irq_macros.asm"
 .include "src/pointer-macros.asm"
 
+.segment "CHAR"
+.include "assets/commando-charset.s"
+.segment "MAP"
+.include "assets/commando-map.s"
 ;========================================================================
 ; Entry Point
 ;========================================================================
@@ -17,8 +21,7 @@ jmp init
 .include "src/vchar.asm"
 .include "src/vic.asm"
 .include "src/map.asm"
-.segment "MAP"
-.include "assets/commando-map.s"
+
 .CODE
 counter: .byte $00
 
@@ -57,6 +60,7 @@ init:
         jsr clearColorRam
         lda #0
         sta vpX
+        
         vicCopyChars charset, $3000, CHARSET_COUNT
         vicCopyColors colors
         jsr renderMap
@@ -103,7 +107,4 @@ renderMap:
 .include "src/hardware.asm"
 .include "src/cia.asm"
 .include "src/memory.asm"
-
 .include "assets/commando-colors.s"
-.segment "CHAR"
-.include "assets/commando-charset.s"

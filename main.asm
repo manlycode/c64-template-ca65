@@ -17,6 +17,9 @@ jmp init
 .include "src/vchar.asm"
 .include "src/vic.asm"
 .include "src/map.asm"
+.segment "MAP"
+.include "assets/commando-map.s"
+.CODE
 counter: .byte $00
 
 init:
@@ -104,8 +107,3 @@ renderMap:
 .include "assets/commando-colors.s"
 .segment "CHAR"
 .include "assets/commando-charset.s"
-.segment "MAP"
-.include "assets/commando-map.s"
-
-
-        

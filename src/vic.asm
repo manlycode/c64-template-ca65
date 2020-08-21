@@ -176,71 +176,16 @@ copyCharsLoop:
   lda source,x
   sta dest,x
 
-  lda source+$100,x
-  sta dest+$100,x
+  .repeat .const(size/256),I
+  lda source+(I*$100),x
+  sta dest+(I*$100),x
+  .endrepeat
 
-  lda source+$200,x
-  sta dest+$200,x
-
-  lda source+$300,x
-  sta dest+$300,x
-
-  lda source+$400,x
-  sta dest+$400,x
-
-  lda source+$500,x
-  sta dest+$500,x
-
-  lda source+$600,x
-  sta dest+$600,x
-
-  lda source+$700,x
-  sta dest+$700,x
   clc
   clv
   inx
   bne copyCharsLoop
 .endmacro
-
-
-.macro	copyMapInit aMapPtr, aScreenPtr, aMapWidth, aMapHeight, aScreenWidth, aScreenHeight, mStrtX, mStrtY, scrnStrtX, scrnStrtY
-        savePointer aMapPtr, mapPtr
-        savePointer aScreenPtr, screenPtr
-        
-        ; set map dimensions
-        lda #aMapWidth
-        sta mapWidth
-        lda #aMapHeight
-        sta mapHeight
-
-        ; set screen dimensions
-        lda #aScreenWidth
-        sta screenWidth
-        lda #aScreenHeight
-        sta screenHeight
-
-        lda #mStrtX
-        sta mapX
-        sta mapStartX
-        lda #mStrtY
-        sta mapY
-
-        lda #scrnStrtX
-        sta screenX
-        sta screenStartX
-        lda #scrnStrtY
-        sta screenY
-
-        lda #((mStrtY*aMapWidth)+mStrtX)
-        sta mapIdx
-
-        lda #((scrnStrtY*aScreenWidth)+scrnStrtX)
-        sta screenIdx       
-
-        lda #(aMapWidth-aScreenWidth)
-        sta mapOverlapX
-.endmacro
-
 
 .CODE
 scrollVal:

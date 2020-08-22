@@ -146,6 +146,8 @@ vic_SCREEN_HEIGHT = 21
 
 .macro set38ColumnMode
   lda vic_controlh
+  clc
+  clv
   and #247
   sta vic_controlh
 .endmacro
@@ -191,16 +193,6 @@ copyColorsLoop:
 scrollVal:
         .byte $00
 
-.macro updateScroll
-  clc
-  clv
-  inc scrollVal
-  lda scrollVal
-  and #%00000111
-  ora vic_controlh
-  sta vic_controlh
-.endmacro
-
 .macro clearScreen target
         ldx #0
         lda #0
@@ -211,3 +203,27 @@ scrollVal:
         inx
         bne :-
 .endmacro
+
+incScroll:
+        clc
+        clv
+        lda scrollVal
+        adc #1
+        and #%00000111
+        sta scrollVal
+        rts
+
+decScroll:
+        dec scrollVal
+        lda scrollVal
+        and #%00000111
+        sta scrollVal
+        rts
+
+updateScroll:
+        lda vic_controlh
+        and #248
+        clc
+        adc scrollVal
+        sta vic_controlh
+        rts

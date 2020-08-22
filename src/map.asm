@@ -63,7 +63,6 @@ vpY: .byte $00
         lda #ScreenCol
         tay
 
-
         .repeat (25 / tileH), I
         lda Map+(mapW*tileH*I),x
         sta Screen+((SCREEN_W*tileH)*I),y

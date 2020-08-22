@@ -2,9 +2,7 @@
 ; Imports
 .debuginfo +
 .listbytes unlimited
-
-.include "c64.inc"                      ; c64 constants
-.include "cbm.mac"
+.include "src/system.inc"
 .include "src/irq_macros.asm"
 .include "src/pointer-macros.asm"
 
@@ -18,6 +16,7 @@
 
 .CODE
 jmp init
+.include "src/cia.asm"
 .include "src/vchar.asm"
 .include "src/vic.asm"
 .include "src/map.asm"
@@ -31,17 +30,21 @@ init:
 
         jsr clearScreenRam
         
-        ; lda #0
-        ; sta vic_cborder
         ; Disable CIA Timers
-        ldy #$7f                ; bit mask
-                                ; 7 - Set or Clear the following bits in the mask.
-                                ; in this case, we're clearing them
-        sty cia1_icr               ; CIA1_ICR
-        sty cia2_icr               ; CIA2_ICR
+        cia_DisableTimers
 
-        set38ColumnMode
+
+        vicSelectBank 0
+        vicSelectScreenMemory 1        ; $0400
+        vicSelectCharMemory 14         ; $3000
         vicSetMultiColorMode
+        set38ColumnMode
+
+        lda #7
+        sta scrollVal
+        jsr updateScroll
+
+        
         lda #9
         sta vic_cbg0
         lda #0
@@ -49,9 +52,6 @@ init:
         lda #15
         sta vic_cbg2
 
-        vicSelectBank 0
-        vicSelectScreenMemory 1        ; $0400
-        vicSelectCharMemory 14         ; $3000
         
         lda #0
         sta vic_cborder
@@ -66,8 +66,7 @@ init:
         jsr renderMap
 
         ; Clear CIA IRQs by reading the registers
-        lda cia1_icr            ; CIA1_ICR
-        lda cia2_icr            ; CIA2_ICR
+        cia_EnableTimers
 
 addRasterCall:
         addRasterInterrupt irq, 0
@@ -75,36 +74,61 @@ addRasterCall:
         jmp *                   ; infinite loop
 
 irq:
-        dec $d019
+    
         ; Begin Code ----------
-        clc
-        clv
+        .repeat 32,I
         lda counter
-        cmp #4
+        .endrepeat
+        cmp #0
         bne :+
-        lda #$ff
-        sta counter
-        updateScroll
-        jsr renderMap
-        inc vpX
-:       inc counter
-
-
-
-
+        jsr frame30
+        dec $d019
+:
         ; End Code ----------
-
         jmp $ea81
 
 
+frame30:
+        jsr decScroll
+        jsr updateScroll
+        clc
+        clv
+        lda scrollVal
+        cmp #0
+        bne :+
+        ; reset the scroll
+        clc
+        clv
+        lda #7
+        sta scrollVal
+        jsr updateScroll
+        ; increment viewport
+        inc vpX
+        
+        ; render map
+        jsr renderMap
+        
+:
+        rts
+
 renderMap:
         copyMap map, MAP_WIDTH, MAP_HEIGHT, 1, 1, charset, CHARSET_COUNT, $0400
-
         rts
+
+renderColL:
+        copyColumn map, MAP_WIDTH, MAP_HEIGHT, 1, 1, charset, CHARSET_COUNT, $0400, 0
+        rts
+
+renderColR:
+        copyColumn map, MAP_WIDTH, MAP_HEIGHT, 1, 1, charset, CHARSET_COUNT, $0400, 39
+        rts
+
+; renderMap:
+;         copyMap map, MAP_WIDTH, MAP_HEIGHT, 1, 1, charset, CHARSET_COUNT, $0400
+;         rts
 
 
 .include "src/init.asm"
 .include "src/hardware.asm"
-.include "src/cia.asm"
 .include "src/memory.asm"
 .include "assets/commando-colors.s"

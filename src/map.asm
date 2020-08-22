@@ -54,6 +54,21 @@ vpY: .byte $00
         jmp :-
 :
 .endmacro
+
+.macro copyColumn Map, mapW, mapH, tileW, tileH, Charset, charCOUNT, Screen, ScreenCol
+        lda vpX
+        adc #ScreenCol
+        tax
+
+        lda #ScreenCol
+        tay
+
+
+        .repeat (25 / tileH), I
+        lda Map+(mapW*tileH*I),x
+        sta Screen+((SCREEN_W*tileH)*I),y
+        .endrepeat
+.endmacro
 ;------------------------------------------------------------------
 ; Subroutines
 ;------------------------------------------------------------------

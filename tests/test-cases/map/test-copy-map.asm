@@ -1,6 +1,6 @@
 ; @access public
 ; @return void
-testInitMap: .scope
+testCopyMap: .scope
         targetScreen := $5000
         clearScreen targetScreen
         
@@ -20,10 +20,5 @@ doCopyMap:
         copyMap map, 80, 200, 1, 1, charset,CHAR_COUNT, targetScreen
         rts
 
-.segment "MAP"
-        .include "tests/assets/commando-map.s"
-.segment "CHAR"
-        .include "tests/assets/commando-charset.s"
-.segment "HIRAM"
-        .include "tests/assets/commando-colors.s"
+
 .endscope

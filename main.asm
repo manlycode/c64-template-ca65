@@ -60,7 +60,7 @@ init:
         jsr clearColorRam
         lda #0
         sta vpX
-        
+
         vicCopyChars charset, $3000, CHARSET_COUNT
         vicCopyColors colors
         jsr renderMap
@@ -85,8 +85,8 @@ irq:
         lda #$ff
         sta counter
         updateScroll
-        ; jsr renderMap
-        ; inc vpX
+        jsr renderMap
+        inc vpX
 :       inc counter
 
 

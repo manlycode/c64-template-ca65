@@ -24,4 +24,4 @@
 	; Testsuite with all test cases
 	.include "tests/test-cases/sum-to-zero-page/test.asm"
 	.include "tests/test-cases/sum-to-zero-page-with-data-set/test.asm"
-	.include "tests/test-cases/map/test-init-map.asm"
+	.include "tests/test-cases/map/test-copy-map.asm"

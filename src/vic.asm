@@ -200,3 +200,14 @@ scrollVal:
   ora vic_controlh
   sta vic_controlh
 .endmacro
+
+.macro clearScreen target
+        ldx #0
+        lda #0
+:       
+        .repeat (1000/256)
+        sta target,x
+        .endrepeat
+        inx
+        bne :-
+.endmacro

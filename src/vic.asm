@@ -193,7 +193,7 @@ copyColorsLoop:
 scrollVal:
         .byte $00
 
-.macro clearScreen target
+.macro vic_clearScreen target
         ldx #0
         lda #0
 :       

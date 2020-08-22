@@ -4,19 +4,6 @@ disableRunStop:
         sta $0328
 	rts
 
-clearScreenRam:
-        ; Clear screen ram
-        ldx #0
-        lda #$20                 ; Space petscii	lda #0
-@clearScreenRamLoop:
-        sta $0400,x
-        sta $0500,x
-        sta $0600,x
-        sta $0700,x
-        inx
-        bne @clearScreenRamLoop        ; x will eventually roll over to 0
-	rts
-
 clearColorRam:
 	ldx #0
 @clearColorRamLoop:

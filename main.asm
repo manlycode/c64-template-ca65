@@ -28,8 +28,6 @@ init:
         jsr disableRunStop        
         sei
 
-        jsr clearScreenRam
-        
         ; Disable CIA Timers
         cia_DisableTimers
 
@@ -39,6 +37,8 @@ init:
         vicSelectCharMemory 14         ; $3000
         vicSetMultiColorMode
         set38ColumnMode
+
+        vic_clearScreen $0400
 
         lda #7
         sta scrollVal
@@ -56,7 +56,7 @@ init:
         lda #0
         sta vic_cborder
         sta scrollVal
-        jsr clearScreenRam
+        vic_clearScreen $0400
         jsr clearColorRam
         lda #0
         sta vpX

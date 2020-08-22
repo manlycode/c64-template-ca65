@@ -63,7 +63,7 @@ vic_SCREEN_HEIGHT = 21
 ; 2 $8000-$BFFF
 ; 3 $C000-$FFFF (Charset not available)
 ;========================================================================
-.macro vicSelectBank bankNum
+.macro vic_SelectBank bankNum
   _selectBank bankNum, $dd02, $dd00
 .endmacro
 
@@ -98,7 +98,7 @@ vic_SCREEN_HEIGHT = 21
 ; 14 -- $3400      ; 30 -- $7400      
 ; 15 -- $3800      ; 31 -- $7800      
 ; 16 -- $3C00      ; 32 -- $7C00      
-.macro vicSelectScreenMemory idx 
+.macro vic_SelectScreenMemory idx 
   pVicSelectScreenMemory idx, vic_ram
 .endmacro
 
@@ -112,7 +112,7 @@ vic_SCREEN_HEIGHT = 21
 ;========================================================================
 ; Character Memory pg 103 - 106
 ;========================================================================
-.macro vicSelectCharMemory idx
+.macro vic_SelectCharMemory idx
   _vicSelectCharMemory idx, vic_ram
 .endmacro
 
@@ -126,25 +126,25 @@ vic_SCREEN_HEIGHT = 21
 ;========================================================================
 ; Multi-color Mode pg 115
 ;========================================================================
-.macro vicSetMultiColorMode
+.macro vic_SetMultiColorMode
   lda vic_controlh
   ora #%00010000
   sta vic_controlh
 .endmacro
 
-.macro vicSetStandardCharacterMode
+.macro vic_SetStandardCharacterMode
   lda vic_controlh
   and #%11101111
   sta vic_controlh
 .endmacro
 
-.macro vicSetHiRezBitmap
+.macro vic_SetHiRezBitmap
   lda vic_controlh
   ora #32
   sta vic_controlh
 .endmacro
 
-.macro set38ColumnMode
+.macro vic_set38ColumnMode
   lda vic_controlh
   clc
   clv
@@ -152,7 +152,7 @@ vic_SCREEN_HEIGHT = 21
   sta vic_controlh
 .endmacro
 
-.macro unset38ColumnMode
+.macro vic_set40ColumnMode
   lda vic_controlh
   ora #8
   sta vic_controlh
@@ -161,7 +161,7 @@ vic_SCREEN_HEIGHT = 21
 ;========================================================================
 ; Color RAM
 ;========================================================================
-.macro vicCopyColors source
+.macro vic_CopyColors source
   ldx #0
 copyColorsLoop:
   lda source,x
@@ -172,7 +172,7 @@ copyColorsLoop:
   bne copyColorsLoop
 .endmacro
 
-.macro vicCopyChars source, dest, SIZE
+.macro vic_CopyChars source, dest, SIZE
   ldx #0
 
 : lda source,x

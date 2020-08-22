@@ -32,11 +32,11 @@ init:
         cia_DisableTimers
 
 
-        vicSelectBank 0
-        vicSelectScreenMemory 1        ; $0400
-        vicSelectCharMemory 14         ; $3000
-        vicSetMultiColorMode
-        set38ColumnMode
+        vic_SelectBank 0
+        vic_SelectScreenMemory 1        ; $0400
+        vic_SelectCharMemory 14         ; $3000
+        vic_SetMultiColorMode
+        vic_set38ColumnMode
 
         vic_clearScreen $0400
 
@@ -61,8 +61,8 @@ init:
         lda #0
         sta vpX
 
-        vicCopyChars charset, $3000, CHARSET_COUNT
-        vicCopyColors colors
+        vic_CopyChars charset, $3000, CHARSET_COUNT
+        vic_CopyColors colors
         jsr renderMap
 
         ; Clear CIA IRQs by reading the registers

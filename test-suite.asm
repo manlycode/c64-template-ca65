@@ -13,6 +13,9 @@
 	examineTest testCopyMap
 	examineTest testCopyColumn
 	examineTest testSetBits
+	examineTest testIncPtr
+	examineTest testDecPtr
+
 	; If this point is reached, there were no assertion fails
 	c64unitExit
 	
@@ -37,3 +40,5 @@
 	.include "tests/test-cases/map/test-copy-map.asm"
 	.include "tests/test-cases/map/test-copy-column.asm"
 	.include "tests/test-cases/util/test-set-bits.asm"
+	.include "tests/test-cases/util/test-inc-ptr.asm"
+	.include "tests/test-cases/util/test-dec-ptr.asm"

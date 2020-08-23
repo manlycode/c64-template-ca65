@@ -24,6 +24,7 @@ jmp init
 
 .CODE
 counter: .byte $00
+nextRasterLine: .word $00
 
 init:
         jsr disableRunStop        
@@ -71,36 +72,21 @@ init:
 
 addRasterCall:
         ; addRasterInterrupt irq, 0
-        addRasterInterrupt irq, 0
+        addRasterInterrupt irq, nextRasterLine
         cli                     ; clear interrupt disable flat
         jmp *                   ; infinite loop
 
 irq:
         
         ; Begin Code ----------
-        .repeat 32,I
-        lda counter
+
         .endrepeat
         cmp #0
         bne :+
         lda #0
         sta vic_cbg0
-:       addRasterInterrupt irq2, 100
+:       addRasterInterrupt irq, 
         en
-
-        irq_endISR
-
-irq2:
-        lda #2
-        sta vic_cbg0
-        addRasterInterrupt irq3, 200
-
-        irq_endISR
-
-irq3:
-        lda #3
-        sta vic_cbg0
-        addRasterInterrupt irq, 0
 
         irq_endISR
 

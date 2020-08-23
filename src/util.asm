@@ -27,3 +27,13 @@
         dec Word+1
 :
 .endmacro
+
+.macro addWord Word, amount
+        clv
+        lda Word
+        adc #amount
+        sta Word
+        bne :+
+        inc Word+1
+:
+.endmacro

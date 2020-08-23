@@ -15,6 +15,7 @@
 	examineTest testSetBits
 	examineTest testIncPtr
 	examineTest testDecPtr
+	examineTest testAddWord
 
 	; If this point is reached, there were no assertion fails
 	c64unitExit
@@ -42,3 +43,4 @@
 	.include "tests/test-cases/util/test-set-bits.asm"
 	.include "tests/test-cases/util/test-inc-ptr.asm"
 	.include "tests/test-cases/util/test-dec-ptr.asm"
+	.include "tests/test-cases/util/test-add-word.asm"

@@ -5,17 +5,25 @@
 .endmacro
 
 .macro incPtr PtrAddr
-        clv
-        inc PtrAddr
-        bne :+
-        inc PtrAddr+1
-:
+        incWord PtrAddr
 .endmacro
 
 .macro decPtr Ptr
+        decWord Ptr
+.endmacro
+
+.macro incWord Word
+        clv
+        inc Word
+        bne :+
+        inc Word+1
+:
+.endmacro
+
+.macro decWord Word
         clc
-        dec Ptr
+        dec Word
         bpl :+
-        dec Ptr+1
+        dec Word+1
 :
 .endmacro

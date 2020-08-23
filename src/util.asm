@@ -29,11 +29,10 @@
 .endmacro
 
 .macro addWord Word, amount
-        clv
         lda Word
+        clc
         adc #amount
-        sta Word
-        bne :+
+        bcc :+
         inc Word+1
-:
+:       sta Word
 .endmacro

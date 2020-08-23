@@ -17,7 +17,7 @@ testAddWord: .scope
         sta ptr+1
 
         addWord ptr, 8
-        assertEqual #$00, ptr
+        assertEqual #$07, ptr
         assertEqual #$01, ptr+1
         rts
 

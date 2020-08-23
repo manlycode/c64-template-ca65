@@ -1,6 +1,8 @@
 
 	.debuginfo +
 
+	.segment "SCREEN"
+	.CODE
 	.include "src/system.inc"
 	.include "vendor/c64unit/cross-assemblers/ca65/core2000.asm"
   

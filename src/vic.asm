@@ -16,12 +16,12 @@ vic_ys6		= $d00d
 vic_xs7		= $d00e
 vic_ys7		= $d00f
 vic_msb_xs	= $d010
-vic_controlv	= $d011	; vertical control (and much other stuff)
-vic_line	= $d012	; raster line
+VIC_CTRL_V      = VIC_CTRL1
+; vic_line	= $d012	; raster line
 vic_xlp		= $d013	; light pen coordinates
 vic_ylp		= $d014
 vic_sactive	= $d015	; sprites: active
-vic_controlh	= $d016	; horizontal control (and much other stuff)
+VIC_CTRL_H       = VIC_CTRL2
 vic_sdy		= $d017	; sprites: double height
 vic_ram		= $d018	; RAM pointer
 vic_irq		= $d019
@@ -127,35 +127,35 @@ vic_SCREEN_HEIGHT = 21
 ; Multi-color Mode pg 115
 ;========================================================================
 .macro vic_SetMultiColorMode
-  lda vic_controlh
+  lda VIC_CTRL_H
   ora #%00010000
-  sta vic_controlh
+  sta VIC_CTRL_H
 .endmacro
 
 .macro vic_SetStandardCharacterMode
-  lda vic_controlh
+  lda VIC_CTRL_H
   and #%11101111
-  sta vic_controlh
+  sta VIC_CTRL_H
 .endmacro
 
 .macro vic_SetHiRezBitmap
-  lda vic_controlh
+  lda VIC_CTRL_H
   ora #32
-  sta vic_controlh
+  sta VIC_CTRL_H
 .endmacro
 
 .macro vic_set38ColumnMode
-  lda vic_controlh
+  lda VIC_CTRL_H
   clc
   clv
   and #247
-  sta vic_controlh
+  sta VIC_CTRL_H
 .endmacro
 
 .macro vic_set40ColumnMode
-  lda vic_controlh
+  lda VIC_CTRL_H
   ora #8
-  sta vic_controlh
+  sta VIC_CTRL_H
 .endmacro
 
 ;========================================================================
@@ -221,9 +221,9 @@ decScroll:
         rts
 
 updateScroll:
-        lda vic_controlh
+        lda VIC_CTRL_H
         and #248
         clc
         adc scrollVal
-        sta vic_controlh
+        sta VIC_CTRL_H
         rts

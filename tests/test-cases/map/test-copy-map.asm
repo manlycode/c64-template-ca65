@@ -2,7 +2,7 @@
 ; @return void
 testCopyMap: .scope
         targetScreen := $5000
-        clearScreen targetScreen
+        vic_clearScreen targetScreen
         
         lda #0
         sta vpX

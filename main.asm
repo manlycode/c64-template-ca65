@@ -5,6 +5,7 @@
 .include "src/system.inc"
 .include "src/irq_macros.asm"
 .include "src/pointer-macros.asm"
+.include "src/util.asm"
 
 .segment "CHAR"
 .include "assets/commando-charset.s"
@@ -69,47 +70,39 @@ init:
         cia_EnableTimers
 
 addRasterCall:
+        ; addRasterInterrupt irq, 0
         addRasterInterrupt irq, 0
         cli                     ; clear interrupt disable flat
         jmp *                   ; infinite loop
 
 irq:
-    
+        
         ; Begin Code ----------
         .repeat 32,I
         lda counter
         .endrepeat
         cmp #0
         bne :+
-        jsr frame30
-        dec $d019
-:
-        ; End Code ----------
-        jmp $ea81
+        lda #0
+        sta vic_cbg0
+:       addRasterInterrupt irq2, 100
+        en
 
+        irq_endISR
 
-frame30:
-        jsr decScroll
-        jsr updateScroll
-        clc
-        clv
-        lda scrollVal
-        cmp #0
-        bne :+
-        ; reset the scroll
-        clc
-        clv
-        lda #7
-        sta scrollVal
-        jsr updateScroll
-        ; increment viewport
-        inc vpX
-        
-        ; render map
-        jsr renderMap
-        
-:
-        rts
+irq2:
+        lda #2
+        sta vic_cbg0
+        addRasterInterrupt irq3, 200
+
+        irq_endISR
+
+irq3:
+        lda #3
+        sta vic_cbg0
+        addRasterInterrupt irq, 0
+
+        irq_endISR
 
 renderMap:
         copyMap map, MAP_WIDTH, MAP_HEIGHT, 1, 1, charset, CHARSET_COUNT, $0400

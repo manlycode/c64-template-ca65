@@ -24,8 +24,11 @@ jmp init
 
 .CODE
 counter: .byte $00
-nextRasterLine: .word $00
-
+counter2: .byte $00
+nextRasterLine: .word $0000
+scrollCounter:
+        .byte $00
+        .byte $00
 init:
         jsr disableRunStop        
         sei
@@ -33,7 +36,7 @@ init:
         ; Disable CIA Timers
         cia_DisableTimers
 
-
+        jsr initJoystick
         vic_SelectBank 0
         vic_SelectScreenMemory 1        ; $0400
         vic_SelectCharMemory 14         ; $3000
@@ -46,14 +49,12 @@ init:
         sta scrollVal
         jsr updateScroll
 
-        
         lda #9
         sta vic_cbg0
         lda #0
         sta vic_cbg1
         lda #15
         sta vic_cbg2
-
         
         lda #0
         sta vic_cborder
@@ -65,34 +66,51 @@ init:
 
         vic_CopyChars charset, $3000, CHARSET_COUNT
         vic_CopyColors colors
-        jsr renderMap
+
+
+        inc vpXbuffer
+        jsr renderMap1
+        jsr renderBuffer1
 
         ; Clear CIA IRQs by reading the registers
         cia_EnableTimers
 
 addRasterCall:
-        ; addRasterInterrupt irq, 0
-        addRasterInterrupt irq, nextRasterLine
+        addRasterInterrupt irqTop, 0
         cli                     ; clear interrupt disable flat
         jmp *                   ; infinite loop
 
-irq:
+irqTop:
+        ; addRasterInterrupt d, $33
         
         ; Begin Code ----------
+        ; jsr updateScroll
 
-        .endrepeat
-        cmp #0
-        bne :+
-        lda #0
-        sta vic_cbg0
-:       addRasterInterrupt irq, 
-        en
-
+        jsr checkJoystick
+        ; End Code ----------
         irq_endISR
-
-renderMap:
+        rts
+        
+renderMap1:
         copyMap map, MAP_WIDTH, MAP_HEIGHT, 1, 1, charset, CHARSET_COUNT, $0400
         rts
+
+renderBuffer1:
+        copyBuffer map, MAP_WIDTH, MAP_HEIGHT, 1, 1, charset, CHARSET_COUNT, $2000
+        rts
+
+renderMap2:
+        copyMap map, MAP_WIDTH, MAP_HEIGHT, 1, 1, charset, CHARSET_COUNT, $2000
+        rts
+
+renderBuffer2:
+        copyBuffer map, MAP_WIDTH, MAP_HEIGHT, 1, 1, charset, CHARSET_COUNT, $0400
+        rts
+
+
+
+SCREEN1 := $0400
+SCREEN2 := $0400
 
 renderColL:
         copyColumn map, MAP_WIDTH, MAP_HEIGHT, 1, 1, charset, CHARSET_COUNT, $0400, 0
@@ -105,9 +123,17 @@ renderColR:
 ; renderMap:
 ;         copyMap map, MAP_WIDTH, MAP_HEIGHT, 1, 1, charset, CHARSET_COUNT, $0400
 ;         rts
+bufferIdx:
+        .byte $00
+bufferTable:
+        .repeat 128,I
+                .byte $04
+                .byte $20
+        .endrepeat
 
 
 .include "src/init.asm"
 .include "src/hardware.asm"
 .include "src/memory.asm"
+.include "src/joystick.asm"
 .include "assets/commando-colors.s"

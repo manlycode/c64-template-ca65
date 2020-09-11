@@ -1,0 +1,4 @@
+0872 nextRasterLine
+0873 nextRasterLine+1
+0F48 joy_currentState
+0F49 joy_prevState

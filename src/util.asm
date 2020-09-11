@@ -1,7 +1,15 @@
+.FEATURE addrsize
+
 .macro setBits target, bits
-        lda target
-        ora #bits
-        sta target
+        .if .const(bits)
+                lda target
+                ora #bits
+                sta target
+        .else
+                lda target
+                ora bits
+                sta target
+        .endif
 .endmacro
 
 .macro incPtr PtrAddr
@@ -31,6 +39,7 @@
 .macro addWord Word, amount
         lda Word
         clc
+        clv
         adc #amount
         bcc :+
         inc Word+1
